@@ -167,11 +167,35 @@
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
         }
 
         .status-pending {
-            background: #fff3cd;
-            color: #856404;
+            background: linear-gradient(135deg, #ffc107, #ff8f00);
+            color: white;
+        }
+
+        .status-process {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            animation: processPulse 2s infinite;
+        }
+
+        .status-completed {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .status-canceled {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        @keyframes processPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .btn-home {
@@ -213,12 +237,48 @@
         .btn-home:active {
             transform: translateY(-1px);
         }
+
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(74, 124, 89, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 1000;
+            display: none;
+        }
+
+        .refresh-indicator.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .responsible-person {
+            margin: 8px 0;
+            padding: 6px 12px;
+            background: rgba(23, 162, 184, 0.1);
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #138496;
+        }
+
+        .status-icon {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container-mobile">
         <!-- Success Message -->
-        <div class="success-card">
+        <div class="success-card" id="successCard">
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
@@ -226,9 +286,22 @@
             <p class="success-subtitle">
                 Terima kasih telah memesan kopi di {{ $transaction->room->name }}
             </p>
-            <span class="status-badge status-pending">
-                <i class="fas fa-clock"></i> Status: Pending
+            <span class="status-badge status-{{ $transaction->status }}">
+                @if($transaction->status == 'pending')
+                    <i class="fas fa-clock status-icon"></i> Menunggu
+                @elseif($transaction->status == 'process')
+                    <i class="fas fa-spinner fa-spin status-icon"></i> Diproses
+                @elseif($transaction->status == 'completed')
+                    <i class="fas fa-check-circle status-icon"></i> Selesai
+                @elseif($transaction->status == 'canceled')
+                    <i class="fas fa-times-circle status-icon"></i> Dibatalkan
+                @endif
             </span>
+            @if($transaction->status == 'process' && $transaction->user->name != 'Admin')
+                <div class="responsible-person">
+                    <i class="fas fa-user"></i> Diproses oleh: <strong>{{ $transaction->user->name }}</strong>
+                </div>
+            @endif
         </div>
 
         <!-- Order Details -->
@@ -273,6 +346,60 @@
         </button>
     </div>
 
+    <!-- Refresh Indicator -->
+    <div class="refresh-indicator" id="refreshIndicator">
+        <i class="fas fa-sync-alt fa-spin"></i> Memperbarui status...
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto refresh every 5 seconds
+        setInterval(function() {
+            refreshTransactionStatus();
+        }, 5000);
+
+        function refreshTransactionStatus() {
+            // Show refresh indicator
+            const indicator = document.getElementById('refreshIndicator');
+            indicator.classList.add('show');
+
+            // Fetch new data
+            fetch(window.location.href, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                // Parse the response and extract the updated content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newSuccessCard = doc.getElementById('successCard');
+
+                // Update the success card with new status
+                if (newSuccessCard) {
+                    document.getElementById('successCard').innerHTML = newSuccessCard.innerHTML;
+                }
+
+                // Hide refresh indicator
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 1000);
+            })
+            .catch(error => {
+                console.error('Error refreshing transaction status:', error);
+                // Hide refresh indicator even on error
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 1000);
+            });
+        }
+
+        // Initial load
+        console.log('Transaction result page loaded');
+        console.log('Auto-refresh enabled every 5 seconds');
+    </script>
 </body>
 </html>
