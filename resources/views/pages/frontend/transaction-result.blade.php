@@ -323,7 +323,17 @@
             <div class="order-item">
                 <div>
                     <div class="item-name">{{ $detail->menu->name }}</div>
-                    <div class="item-quantity">Qty: {{ $detail->quantity }}</div>
+                    <div class="item-quantity">
+                        <i class="fas fa-sliders-h"></i>
+                        @if($detail->variant == 'less_sugar')
+                            Kurang Manis
+                        @elseif($detail->variant == 'normal')
+                            Normal
+                        @elseif($detail->variant == 'no_sugar')
+                            Tanpa Gula
+                        @endif
+                        | Qty: {{ $detail->quantity }}
+                    </div>
                 </div>
                 <div class="item-price">
                     <i class="fas fa-check-circle text-success"></i>

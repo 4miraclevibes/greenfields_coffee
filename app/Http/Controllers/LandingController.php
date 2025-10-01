@@ -41,7 +41,8 @@ class LandingController extends Controller
                 'room_id' => 'required|exists:rooms,id',
                 'items' => 'required|array|min:1',
                 'items.*.menu_id' => 'required|exists:menus,id',
-                'items.*.quantity' => 'required|integer|min:1'
+                'items.*.quantity' => 'required|integer|min:1',
+                'items.*.variant' => 'required|in:less_sugar,normal,no_sugar'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::error('Validation failed:', $e->errors());
@@ -65,7 +66,8 @@ class LandingController extends Controller
                 TransactionDetail::create([
                     'transaction_id' => $transaction->id,
                     'menu_id' => $item['menu_id'],
-                    'quantity' => $item['quantity']
+                    'quantity' => $item['quantity'],
+                    'variant' => $item['variant']
                 ]);
             }
 

@@ -72,20 +72,20 @@
 
         .menu-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 15px;
             margin-bottom: 20px;
         }
 
         /* Ensure equal height cards */
         .menu-grid .menu-card {
-            min-height: 180px;
+            min-height: auto;
         }
 
         .menu-card {
             background: white;
             border-radius: 16px;
-            padding: 15px;
+            padding: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border-left: 4px solid #4a7c59;
             transition: all 0.3s ease;
@@ -93,7 +93,6 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 100%;
         }
 
         .menu-card::before {
@@ -113,9 +112,8 @@
 
         .menu-image {
             width: 100%;
-            height: 80px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+            height: 120px;
+            border-radius: 10px;
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             display: flex;
             align-items: center;
@@ -125,6 +123,14 @@
             border: 2px dashed #dee2e6;
             position: relative;
             overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .menu-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
         }
 
         .menu-image img {
@@ -158,15 +164,19 @@
             font-weight: 500;
         }
 
+        .menu-info {
+            margin-bottom: 8px;
+        }
+
         .menu-name {
             color: #2d5a27;
             font-weight: bold;
             font-size: 1rem;
-            margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             line-height: 1.2;
+            margin-bottom: 4px;
         }
 
         .menu-name::before {
@@ -176,15 +186,89 @@
 
         .menu-desc {
             color: #666;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            line-height: 1.3;
+            font-size: 0.75rem;
+            line-height: 1.2;
             font-style: italic;
-            flex-grow: 1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+        }
+
+        .variant-section {
+            margin: 0;
+        }
+
+        .variant-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #2d5a27;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .variant-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .variant-option {
+            position: relative;
+        }
+
+        .variant-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .variant-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 4px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #495057;
+            text-align: center;
+            height: 100%;
+        }
+
+        .variant-label .variant-emoji {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .variant-label .variant-text {
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        .variant-option input[type="radio"]:checked + .variant-label {
+            border-color: #4a7c59;
+            background: #4a7c59;
+            color: white;
+            box-shadow: 0 3px 8px rgba(74, 124, 89, 0.3);
+            transform: scale(1.02);
+        }
+
+        .variant-label:hover {
+            border-color: #4a7c59;
+            background: rgba(74, 124, 89, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .variant-option input[type="radio"]:checked + .variant-label:hover {
+            background: #3d6847;
         }
 
         .quantity-controls {
@@ -361,32 +445,46 @@
             }
 
             .menu-card {
-                padding: 12px;
-                min-height: 160px;
+                padding: 10px;
             }
 
             .menu-image {
-                height: 70px;
-            }
-
-            .btn-quantity {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
-            }
-
-            .quantity-display {
-                min-width: 30px;
-                font-size: 0.9rem;
-                padding: 4px 6px;
+                height: 100px;
+                margin-bottom: 8px;
             }
 
             .menu-name {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
             }
 
             .menu-desc {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
+            }
+
+            .variant-title {
+                font-size: 0.65rem;
+                margin-bottom: 5px;
+            }
+
+            .variant-label {
+                padding: 6px 3px;
+                font-size: 0.65rem;
+            }
+
+            .variant-emoji {
+                font-size: 1.1rem;
+            }
+
+            .btn-quantity {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .quantity-display {
+                min-width: 35px;
+                font-size: 0.95rem;
+                padding: 5px 6px;
             }
 
             .header {
@@ -400,17 +498,13 @@
             .cart-summary {
                 padding: 15px;
                 max-height: 180px;
+                left: 15px;
+                right: 15px;
             }
 
             .btn-order {
                 padding: 10px 20px;
                 font-size: 0.9rem;
-            }
-
-            .cart-summary {
-                left: 15px;
-                right: 15px;
-                max-height: 180px;
             }
 
             #cartItems {
@@ -433,6 +527,7 @@
         <div class="menu-grid" id="menuList">
             @foreach($menus as $menu)
             <div class="menu-card" data-menu-id="{{ $menu->id }}">
+                <!-- Image -->
                 <div class="menu-image">
                     @if($menu->image)
                         <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}">
@@ -443,16 +538,66 @@
                         </div>
                     @endif
                 </div>
-                <div class="menu-name">{{ $menu->name }}</div>
-                <div class="menu-desc">{{ $menu->descriptions }}</div>
-                <div class="quantity-controls">
-                    <button class="btn btn-quantity" onclick="decreaseQuantity({{ $menu->id }})">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <span class="quantity-display" id="qty-{{ $menu->id }}">0</span>
-                    <button class="btn btn-quantity" onclick="increaseQuantity({{ $menu->id }})">
-                        <i class="fas fa-plus"></i>
-                    </button>
+
+                <!-- Content -->
+                <div class="menu-content">
+                    <div class="menu-info">
+                        <div class="menu-name">{{ $menu->name }}</div>
+                        <div class="menu-desc">{{ $menu->descriptions }}</div>
+                    </div>
+
+                    <!-- Variant Selection -->
+                    <div class="variant-section">
+                        <div class="variant-title">
+                            <i class="fas fa-sliders-h"></i> Varian Rasa
+                        </div>
+                        <div class="variant-options">
+                            <div class="variant-option">
+                                <input type="radio"
+                                       name="variant-{{ $menu->id }}"
+                                       id="variant-less-{{ $menu->id }}"
+                                       value="less_sugar"
+                                       checked
+                                       onchange="updateVariant({{ $menu->id }}, 'less_sugar')">
+                                <label for="variant-less-{{ $menu->id }}" class="variant-label">
+                                    <span class="variant-emoji">🙂</span>
+                                    <span class="variant-text">Kurang<br>Manis</span>
+                                </label>
+                            </div>
+                            <div class="variant-option">
+                                <input type="radio"
+                                       name="variant-{{ $menu->id }}"
+                                       id="variant-normal-{{ $menu->id }}"
+                                       value="normal"
+                                       onchange="updateVariant({{ $menu->id }}, 'normal')">
+                                <label for="variant-normal-{{ $menu->id }}" class="variant-label">
+                                    <span class="variant-emoji">😊</span>
+                                    <span class="variant-text">Normal</span>
+                                </label>
+                            </div>
+                            <div class="variant-option">
+                                <input type="radio"
+                                       name="variant-{{ $menu->id }}"
+                                       id="variant-none-{{ $menu->id }}"
+                                       value="no_sugar"
+                                       onchange="updateVariant({{ $menu->id }}, 'no_sugar')">
+                                <label for="variant-none-{{ $menu->id }}" class="variant-label">
+                                    <span class="variant-emoji">🚫</span>
+                                    <span class="variant-text">Tanpa<br>Gula</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quantity-controls">
+                        <button class="btn btn-quantity" onclick="decreaseQuantity({{ $menu->id }})">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="quantity-display" id="qty-{{ $menu->id }}">0</span>
+                        <button class="btn btn-quantity" onclick="increaseQuantity({{ $menu->id }})">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             @endforeach
@@ -490,7 +635,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let cart = {};
+        let variants = {}; // Track selected variant for each menu
         let totalItems = 0;
+
+        // Initialize variants with default value (less_sugar)
+        document.querySelectorAll('.menu-card').forEach(card => {
+            const menuId = card.dataset.menuId;
+            variants[menuId] = 'less_sugar';
+        });
+
+        function updateVariant(menuId, variant) {
+            variants[menuId] = variant;
+            console.log('Variant updated for menu', menuId, 'to', variant);
+        }
 
         function updateQuantity(menuId, change) {
             if (!cart[menuId]) {
@@ -527,16 +684,26 @@
             totalItems = 0;
             let items = [];
 
+            // Variant labels for display
+            const variantLabels = {
+                'less_sugar': 'Kurang Manis',
+                'normal': 'Normal',
+                'no_sugar': 'Tanpa Gula'
+            };
+
             for (let menuId in cart) {
                 if (cart[menuId] > 0) {
                     const menuElement = document.querySelector(`[data-menu-id="${menuId}"]`);
                     const menuName = menuElement.querySelector('.menu-name').textContent;
+                    const variantLabel = variantLabels[variants[menuId]] || 'Normal';
 
                     cartHTML += `
                         <div class="cart-item">
                             <div>
                                 <div class="fw-bold">${menuName}</div>
-                                <small class="text-muted">Qty: ${cart[menuId]}</small>
+                                <small class="text-muted">
+                                    <i class="fas fa-sliders-h"></i> ${variantLabel} | Qty: ${cart[menuId]}
+                                </small>
                             </div>
                             <div class="fw-bold text-success">
                                 <i class="fas fa-check-circle"></i>
@@ -547,7 +714,8 @@
                     totalItems += cart[menuId];
                     items.push({
                         menu_id: parseInt(menuId),
-                        quantity: parseInt(cart[menuId])
+                        quantity: parseInt(cart[menuId]),
+                        variant: variants[menuId]
                     });
                 }
             }
@@ -556,7 +724,7 @@
                 cartHTML = `
                     <div class="empty-cart">
                         <i class="fas fa-shopping-cart fa-2x text-muted"></i>
-                        <p>Belum ada item di keranjang</p>
+                        <p>Belum ada item di pesanan</p>
                     </div>
                 `;
                 orderBtn.disabled = true;
@@ -641,60 +809,6 @@
         document.querySelectorAll('.menu-card').forEach(card => {
             console.log('Menu card found:', card.dataset.menuId);
         });
-
-        function updateCart() {
-            const cartItems = document.getElementById('cartItems');
-            const totalItemsElement = document.getElementById('totalItems');
-            const orderBtn = document.getElementById('orderBtn');
-            const itemsInput = document.getElementById('itemsInput');
-
-            let cartHTML = '';
-            totalItems = 0;
-            let items = [];
-
-            for (let menuId in cart) {
-                if (cart[menuId] > 0) {
-                    const menuElement = document.querySelector(`[data-menu-id="${menuId}"]`);
-                    const menuName = menuElement.querySelector('.menu-name').textContent;
-
-                    cartHTML += `
-                        <div class="cart-item">
-                            <div>
-                                <div class="fw-bold">${menuName}</div>
-                                <small class="text-muted">Qty: ${cart[menuId]}</small>
-                            </div>
-                            <div class="fw-bold text-success">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                        </div>
-                    `;
-
-                    totalItems += cart[menuId];
-                    items.push({
-                        menu_id: parseInt(menuId),
-                        quantity: parseInt(cart[menuId])
-                    });
-                }
-            }
-
-            if (items.length === 0) {
-                cartHTML = `
-                    <div class="empty-cart">
-                        <i class="fas fa-shopping-cart fa-2x text-muted"></i>
-                        <p>Belum ada item di pesanan</p>
-                    </div>
-                `;
-                orderBtn.disabled = true;
-            } else {
-                orderBtn.disabled = false;
-            }
-
-            cartItems.innerHTML = cartHTML;
-            totalItemsElement.textContent = totalItems;
-            itemsInput.value = JSON.stringify(items);
-
-            console.log('Cart updated:', items);
-        }
     </script>
 </body>
 </html>

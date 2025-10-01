@@ -10,7 +10,8 @@ class TransactionDetail extends Model
     protected $fillable = [
         'transaction_id',
         'menu_id',
-        'quantity'
+        'quantity',
+        'variant'
     ];
 
     public function transaction(): BelongsTo

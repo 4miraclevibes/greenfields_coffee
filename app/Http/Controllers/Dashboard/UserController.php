@@ -37,14 +37,17 @@ class UserController extends Controller
             'password' => 'nullable|confirmed|min:8',
         ]);
 
-        $data = $request->all();
+        $user = User::findOrFail($id);
+
+        // Hanya ambil field name dan email (exclude password dan password_confirmation)
+        $data = $request->only(['name', 'email']);
 
         // Hanya update password jika diisi
+
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
-
-        User::find($id)->update($data);
+        $user->update($data);
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 

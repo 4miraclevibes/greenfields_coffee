@@ -88,6 +88,7 @@
             <thead>
               <tr>
                 <th>Menu</th>
+                <th>Variant</th>
                 <th>Quantity</th>
               </tr>
             </thead>
@@ -172,9 +173,22 @@ function viewDetails(id, userName, roomName, status, items) {
   // Populate items table
   let itemsHtml = '';
   items.forEach(function(item) {
+    // Format variant label
+    let variantLabel = '';
+    if (item.variant === 'less_sugar') {
+      variantLabel = '<span class="badge bg-warning">🙂 Kurang Manis</span>';
+    } else if (item.variant === 'normal') {
+      variantLabel = '<span class="badge bg-info">😊 Normal</span>';
+    } else if (item.variant === 'no_sugar') {
+      variantLabel = '<span class="badge bg-secondary">🚫 Tanpa Gula</span>';
+    } else {
+      variantLabel = '<span class="badge bg-light text-dark">-</span>';
+    }
+
     itemsHtml += '<tr>';
     itemsHtml += '<td>' + item.menu.name + '</td>';
-    itemsHtml += '<td>' + item.quantity + '</td>';
+    itemsHtml += '<td>' + variantLabel + '</td>';
+    itemsHtml += '<td><span class="badge bg-primary">' + item.quantity + 'x</span></td>';
     itemsHtml += '</tr>';
   });
   document.getElementById('detail_items').innerHTML = itemsHtml;

@@ -296,9 +296,14 @@
             border-bottom: none;
         }
 
+        .order-item > div:first-child {
+            flex: 1;
+        }
+
         .item-name {
             color: #333;
             font-weight: 500;
+            display: block;
         }
 
         .item-quantity {
@@ -444,7 +449,19 @@
                             <h6><i class="fas fa-list"></i> Detail Pesanan</h6>
                             @foreach($transaction->transactionDetails as $detail)
                             <div class="order-item">
-                                <span class="item-name">{{ $detail->menu->name }}</span>
+                                <div>
+                                    <span class="item-name">{{ $detail->menu->name }}</span>
+                                    <div style="font-size: 0.75rem; color: #666; margin-top: 2px;">
+                                        <i class="fas fa-sliders-h"></i>
+                                        @if($detail->variant == 'less_sugar')
+                                            Kurang Manis
+                                        @elseif($detail->variant == 'normal')
+                                            Normal
+                                        @elseif($detail->variant == 'no_sugar')
+                                            Tanpa Gula
+                                        @endif
+                                    </div>
+                                </div>
                                 <span class="item-quantity">{{ $detail->quantity }}x</span>
                             </div>
                             @endforeach
