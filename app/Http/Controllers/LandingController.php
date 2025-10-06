@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class LandingController extends Controller
 {
@@ -23,25 +24,14 @@ class LandingController extends Controller
     {
         // Debug request data
         \Log::info('Transaction request data:', $request->all());
-        \Log::info('Request method: ' . $request->method());
-        \Log::info('Request headers:', $request->headers->all());
-
-        // Parse items from JSON string if it's a string
-        $items = $request->items;
-        if (is_string($items)) {
-            $items = json_decode($items, true);
-        }
-
-        \Log::info('Parsed items:', $items);
-
-        $request->merge(['items' => $items]);
 
         try {
             $request->validate([
                 'room_id' => 'required|exists:rooms,id',
+                'location' => 'required|string|max:255',
                 'items' => 'required|array|min:1',
                 'items.*.menu_id' => 'required|exists:menus,id',
-                'items.*.quantity' => 'required|integer|min:1',
+                'items.*.employee' => 'required|string|max:255',
                 'items.*.variant' => 'required|in:less_sugar,normal,no_sugar'
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -56,17 +46,19 @@ class LandingController extends Controller
             $transaction = Transaction::create([
                 'user_id' => 1, // Default user for now
                 'room_id' => $request->room_id,
+                'location' => $request->location,
                 'status' => 'pending'
             ]);
 
             \Log::info('Transaction created:', $transaction->toArray());
 
-            // Create transaction details
+            // Create transaction details - each item is separate (no quantity field)
             foreach ($request->items as $item) {
                 TransactionDetail::create([
                     'transaction_id' => $transaction->id,
                     'menu_id' => $item['menu_id'],
-                    'quantity' => $item['quantity'],
+                    'quantity' => 1, // Always 1 since each item is separate
+                    'employee' => $item['employee'],
                     'variant' => $item['variant']
                 ]);
             }
@@ -74,7 +66,7 @@ class LandingController extends Controller
             DB::commit();
 
             \Log::info('Transaction completed successfully');
-
+            $this->sendWhatsappNotification($transaction);
             return redirect()->route('transaction.result', $transaction->id)
                            ->with('success', 'Pesanan berhasil dibuat!');
 
@@ -119,5 +111,110 @@ class LandingController extends Controller
         })->values(); // Re-index the collection after sorting
 
         return view('pages.frontend.queue', compact('transactions'));
+    }
+
+    public function bartenderPickOrder()
+    {
+        // Get pending transactions only
+        $transactions = Transaction::with(['room', 'transactionDetails.menu'])
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('pages.frontend.bartender-pick', compact('transactions'));
+    }
+
+    public function bartenderPickOrderStore(Request $request, Transaction $transaction)
+    {
+        // Validate that transaction is still pending
+        if ($transaction->status !== 'pending') {
+            return redirect()->route('bartender.pick.order')
+                           ->with('error', 'Pesanan ini sudah diambil oleh bartender lain.');
+        }
+
+        // Update transaction status to process and assign to current user
+        $transaction->update([
+            'status' => 'process',
+            'user_id' => Auth::id()
+        ]);
+
+        return redirect()->route('bartender.pick.order')
+                       ->with('success', 'Pesanan berhasil diambil! Silakan proses pesanan.');
+    }
+
+    private function sendWhatsappNotification($transaction)
+    {
+        // Kata-kata intro
+        $intro = [
+            "Ada pesanan kopi baru nih",
+            "Order kopi masuk",
+            "Ada order baru",
+            "Pesanan kopi nih",
+            "Ada pesanan masuk"
+        ];
+
+        // Pilih secara random
+        $selectedIntro = $intro[array_rand($intro)];
+
+        // Load transaction dengan relasi yang diperlukan
+        $transaction = $transaction->load(['room', 'transactionDetails.menu']);
+
+        // Variant labels
+        $variantLabels = [
+            'less_sugar' => 'Kurang Manis',
+            'normal' => 'Normal',
+            'no_sugar' => 'Tanpa Gula'
+        ];
+
+        // Format pesan WhatsApp
+        $message = "☕ *PESANAN KOPI BARU!*\n\n"
+            . "*{$selectedIntro}!*\n\n"
+            . "ID Pesanan: *#{$transaction->id}*\n"
+            . "Ruangan: *{$transaction->room->name}*\n"
+            . "Lokasi Kirim: *{$transaction->location}*\n"
+            . "Waktu Pesan: *{$transaction->created_at->format('d/m/Y H:i')}*\n"
+            . "Status: *" . ucfirst($transaction->status) . "*\n\n"
+            . "*Detail Pesanan ({$transaction->transactionDetails->count()} Item):*\n";
+
+        // Tambahkan detail menu
+        $itemNumber = 1;
+        foreach ($transaction->transactionDetails as $detail) {
+            $variantText = $variantLabels[$detail->variant] ?? $detail->variant;
+            $message .= "{$itemNumber}. {$detail->menu->name}\n"
+                . "   👤 Untuk: {$detail->employee}\n"
+                . "   🎚️ Varian: {$variantText}\n"
+                . "   📦 Qty: {$detail->quantity}x\n\n";
+            $itemNumber++;
+        }
+
+        $message .= "⏰ *Segera proses pesanan ini!*\n"
+            . "📍 Kirim ke: *{$transaction->location}*\n\n"
+            . "👉 *Ambil pesanan:*\n"
+            . url('/bartender/pick-order');
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'target' => '6281261686210', // Nomor admin/bartender
+                'message' => $message
+            ),
+            CURLOPT_HTTPHEADER => array(
+                'Authorization: BehwfEMKPuLsQByWe138' // Ganti dengan token Fonnte Anda
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return $response;
     }
 }

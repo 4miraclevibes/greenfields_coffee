@@ -313,7 +313,8 @@
             </div>
 
             <div class="mb-3">
-                <strong>Lokasi:</strong> {{ $transaction->room->name }}<br>
+                <strong>Ruangan:</strong> {{ $transaction->room->name }}<br>
+                <strong>Lokasi Kirim:</strong> {{ $transaction->location }}<br>
                 <strong>Waktu Pesan:</strong> {{ $transaction->created_at->format('d/m/Y H:i') }}<br>
                 <strong>ID Pesanan:</strong> #{{ $transaction->id }}
             </div>
@@ -324,6 +325,7 @@
                 <div>
                     <div class="item-name">{{ $detail->menu->name }}</div>
                     <div class="item-quantity">
+                        <i class="fas fa-user"></i> {{ $detail->employee }} |
                         <i class="fas fa-sliders-h"></i>
                         @if($detail->variant == 'less_sugar')
                             Kurang Manis
@@ -332,7 +334,6 @@
                         @elseif($detail->variant == 'no_sugar')
                             Tanpa Gula
                         @endif
-                        | Qty: {{ $detail->quantity }}
                     </div>
                 </div>
                 <div class="item-price">

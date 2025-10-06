@@ -12,6 +12,7 @@
             <th class="text-white">No</th>
             <th class="text-white">User</th>
             <th class="text-white">Room</th>
+            <th class="text-white">Location</th>
             <th class="text-white">Status</th>
             <th class="text-white">Items</th>
             <th class="text-white">Created At</th>
@@ -31,6 +32,9 @@
               @endif
             </td>
             <td>
+              <span class="badge bg-info">{{ $transaction->location }}</span>
+            </td>
+            <td>
               @if($transaction->status == 'pending')
                 <span class="badge bg-warning">Pending</span>
               @elseif($transaction->status == 'process')
@@ -43,7 +47,7 @@
             </td>
             <td>
               <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewDetailsModal"
-                      onclick="viewDetails({{ $transaction->id }}, '{{ $transaction->user->name }}', '{{ $transaction->room ? $transaction->room->name : 'No Room' }}', '{{ $transaction->status }}', {{ $transaction->transactionDetails->toJson() }})">
+                      onclick="viewDetails({{ $transaction->id }}, '{{ $transaction->user->name }}', '{{ $transaction->room ? $transaction->room->name : 'No Room' }}', '{{ $transaction->location }}', '{{ $transaction->status }}', {{ $transaction->transactionDetails->toJson() }})">
                 View Items ({{ $transaction->transactionDetails->count() }})
               </button>
             </td>
@@ -73,13 +77,16 @@
       </div>
       <div class="modal-body">
         <div class="row mb-3">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <strong>User:</strong> <span id="detail_user"></span>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <strong>Room:</strong> <span id="detail_room"></span>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
+            <strong>Location:</strong> <span id="detail_location"></span>
+          </div>
+          <div class="col-md-3">
             <strong>Status:</strong> <span id="detail_status"></span>
           </div>
         </div>
@@ -88,6 +95,7 @@
             <thead>
               <tr>
                 <th>Menu</th>
+                <th>Employee</th>
                 <th>Variant</th>
                 <th>Quantity</th>
               </tr>
@@ -152,10 +160,11 @@
 </div>
 
 <script>
-function viewDetails(id, userName, roomName, status, items) {
+function viewDetails(id, userName, roomName, location, status, items) {
   // Set detail information
   document.getElementById('detail_user').textContent = userName;
   document.getElementById('detail_room').textContent = roomName;
+  document.getElementById('detail_location').textContent = location;
 
   // Set status badge
   let statusBadge = '';
@@ -187,6 +196,7 @@ function viewDetails(id, userName, roomName, status, items) {
 
     itemsHtml += '<tr>';
     itemsHtml += '<td>' + item.menu.name + '</td>';
+    itemsHtml += '<td><span class="badge bg-success">' + (item.employee || '-') + '</span></td>';
     itemsHtml += '<td>' + variantLabel + '</td>';
     itemsHtml += '<td><span class="badge bg-primary">' + item.quantity + 'x</span></td>';
     itemsHtml += '</tr>';

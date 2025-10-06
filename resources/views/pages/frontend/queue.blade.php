@@ -433,6 +433,9 @@
                         <div class="queue-number">{{ $transaction->queue_number }}</div>
                         <div class="queue-info">
                             <div class="room-name">{{ $transaction->room->name }}</div>
+                            <div class="order-time" style="margin-bottom: 5px;">
+                                <i class="fas fa-map-marker-alt"></i> {{ $transaction->location }}
+                            </div>
                             <div class="order-time">
                                 <i class="fas fa-clock"></i> {{ $transaction->created_at->format('H:i') }}
                             </div>
@@ -452,6 +455,7 @@
                                 <div>
                                     <span class="item-name">{{ $detail->menu->name }}</span>
                                     <div style="font-size: 0.75rem; color: #666; margin-top: 2px;">
+                                        <i class="fas fa-user"></i> {{ $detail->employee }} |
                                         <i class="fas fa-sliders-h"></i>
                                         @if($detail->variant == 'less_sugar')
                                             Kurang Manis
@@ -481,7 +485,7 @@
 
     <!-- Refresh Indicator -->
     <div class="refresh-indicator" id="refreshIndicator">
-        <i class="fas fa-sync-alt fa-spin"></i> Memperbarui data...
+        <i class="fas fa-sync-alt fa-spin"></i>Test...
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

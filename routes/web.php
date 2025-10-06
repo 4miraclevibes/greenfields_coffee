@@ -44,6 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
 
+    // Bartender Pick Transaction
+    Route::get('/bartender/pick-order', [LandingController::class, 'bartenderPickOrder'])->name('bartender.pick.order');
+    Route::post('/bartender/pick-order/{transaction}', [LandingController::class, 'bartenderPickOrderStore'])->name('bartender.pick.order.store');
+
 });
 
 // Frontend Routes (No Auth Required)

@@ -195,80 +195,96 @@
             overflow: hidden;
         }
 
-        .variant-section {
-            margin: 0;
+        /* Modal Styles */
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.7);
         }
 
-        .variant-title {
-            font-size: 0.7rem;
-            font-weight: 600;
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .order-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4a7c59;
+        }
+
+        .order-item-header {
+            font-weight: bold;
             color: #2d5a27;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
+            margin-bottom: 10px;
+            font-size: 1rem;
         }
 
-        .variant-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-        }
-
-        .variant-option {
-            position: relative;
-        }
-
-        .variant-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .variant-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            padding: 8px 4px;
+        .item-detail {
             background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.7rem;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .item-detail:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-number {
+            font-weight: bold;
+            color: #4a7c59;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
             font-weight: 600;
             color: #495057;
-            text-align: center;
-            height: 100%;
+            margin-bottom: 5px;
         }
 
-        .variant-label .variant-emoji {
-            font-size: 1.3rem;
-            line-height: 1;
+        .form-select, .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 8px 12px;
+            font-size: 0.85rem;
         }
 
-        .variant-label .variant-text {
-            line-height: 1.1;
-            white-space: nowrap;
-        }
-
-        .variant-option input[type="radio"]:checked + .variant-label {
+        .form-select:focus, .form-control:focus {
             border-color: #4a7c59;
-            background: #4a7c59;
+            box-shadow: 0 0 0 0.2rem rgba(74, 124, 89, 0.25);
+        }
+
+        .btn-submit-order {
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
             color: white;
-            box-shadow: 0 3px 8px rgba(74, 124, 89, 0.3);
-            transform: scale(1.02);
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
         }
 
-        .variant-label:hover {
-            border-color: #4a7c59;
-            background: rgba(74, 124, 89, 0.05);
+        .btn-submit-order:hover {
             transform: translateY(-2px);
-        }
-
-        .variant-option input[type="radio"]:checked + .variant-label:hover {
-            background: #3d6847;
+            box-shadow: 0 5px 15px rgba(74, 124, 89, 0.4);
         }
 
         .quantity-controls {
@@ -461,20 +477,6 @@
                 font-size: 0.7rem;
             }
 
-            .variant-title {
-                font-size: 0.65rem;
-                margin-bottom: 5px;
-            }
-
-            .variant-label {
-                padding: 6px 3px;
-                font-size: 0.65rem;
-            }
-
-            .variant-emoji {
-                font-size: 1.1rem;
-            }
-
             .btn-quantity {
                 width: 32px;
                 height: 32px;
@@ -546,49 +548,6 @@
                         <div class="menu-desc">{{ $menu->descriptions }}</div>
                     </div>
 
-                    <!-- Variant Selection -->
-                    <div class="variant-section">
-                        <div class="variant-title">
-                            <i class="fas fa-sliders-h"></i> Varian Rasa
-                        </div>
-                        <div class="variant-options">
-                            <div class="variant-option">
-                                <input type="radio"
-                                       name="variant-{{ $menu->id }}"
-                                       id="variant-less-{{ $menu->id }}"
-                                       value="less_sugar"
-                                       checked
-                                       onchange="updateVariant({{ $menu->id }}, 'less_sugar')">
-                                <label for="variant-less-{{ $menu->id }}" class="variant-label">
-                                    <span class="variant-emoji">🙂</span>
-                                    <span class="variant-text">Kurang<br>Manis</span>
-                                </label>
-                            </div>
-                            <div class="variant-option">
-                                <input type="radio"
-                                       name="variant-{{ $menu->id }}"
-                                       id="variant-normal-{{ $menu->id }}"
-                                       value="normal"
-                                       onchange="updateVariant({{ $menu->id }}, 'normal')">
-                                <label for="variant-normal-{{ $menu->id }}" class="variant-label">
-                                    <span class="variant-emoji">😊</span>
-                                    <span class="variant-text">Normal</span>
-                                </label>
-                            </div>
-                            <div class="variant-option">
-                                <input type="radio"
-                                       name="variant-{{ $menu->id }}"
-                                       id="variant-none-{{ $menu->id }}"
-                                       value="no_sugar"
-                                       onchange="updateVariant({{ $menu->id }}, 'no_sugar')">
-                                <label for="variant-none-{{ $menu->id }}" class="variant-label">
-                                    <span class="variant-emoji">🚫</span>
-                                    <span class="variant-text">Tanpa<br>Gula</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="quantity-controls">
                         <button class="btn btn-quantity" onclick="decreaseQuantity({{ $menu->id }})">
                             <i class="fas fa-minus"></i>
@@ -609,14 +568,9 @@
                 <h5 class="mb-0">
                     <i class="fas fa-shopping-cart"></i> Pesanan
                 </h5>
-                <form id="orderForm" action="{{ route('transaction.store') }}" method="POST" class="d-inline">
-                    @csrf
-                    <input type="hidden" name="room_id" value="{{ $room->id }}">
-                    <input type="hidden" name="items" id="itemsInput" value="[]">
-                    <button type="submit" class="btn btn-order" id="orderBtn" disabled>
-                        <i class="fas fa-check"></i> Pesan Sekarang
-                    </button>
-                </form>
+                <button type="button" class="btn btn-order" id="orderBtn" disabled onclick="showOrderModal()">
+                    <i class="fas fa-check"></i> Pesan Sekarang
+                </button>
             </div>
             <div id="cartItems">
                 <div class="empty-cart">
@@ -632,22 +586,67 @@
         </div>
     </div>
 
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel">
+                        <i class="fas fa-clipboard-list"></i> Detail Pesanan
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="orderForm" action="{{ route('transaction.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="room_id" value="{{ $room->id }}">
+
+                        <!-- Location Selection -->
+                        <div class="order-item" style="margin-bottom: 20px;">
+                            <div class="order-item-header">
+                                <i class="fas fa-map-marker-alt"></i> Lokasi Pengiriman
+                            </div>
+                            <div class="item-detail">
+                                <label class="form-label">
+                                    <i class="fas fa-location-arrow"></i> Pilih Lokasi
+                                </label>
+                                <select name="location" class="form-select" required>
+                                    <option value="">-- Pilih Lokasi --</option>
+                                    <option value="Ruang Meeting 1">Ruang Meeting 1</option>
+                                    <option value="Ruang Meeting 2">Ruang Meeting 2</option>
+                                    <option value="Ruang Meeting 3">Ruang Meeting 3</option>
+                                    <option value="Kantor Utama">Kantor Utama</option>
+                                    <option value="Lobby">Lobby</option>
+                                    <option value="Cafeteria">Cafeteria</option>
+                                    <option value="Ruang Kerja 1">Ruang Kerja 1</option>
+                                    <option value="Ruang Kerja 2">Ruang Kerja 2</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="orderDetailsContainer"></div>
+                        <button type="submit" class="btn btn-submit-order mt-3">
+                            <i class="fas fa-paper-plane"></i> Kirim Pesanan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let cart = {};
-        let variants = {}; // Track selected variant for each menu
         let totalItems = 0;
+        let orderModal = null;
 
-        // Initialize variants with default value (less_sugar)
+        // Get menu data
+        const menuData = {};
         document.querySelectorAll('.menu-card').forEach(card => {
             const menuId = card.dataset.menuId;
-            variants[menuId] = 'less_sugar';
+            const menuName = card.querySelector('.menu-name').textContent;
+            menuData[menuId] = menuName;
         });
-
-        function updateVariant(menuId, variant) {
-            variants[menuId] = variant;
-            console.log('Variant updated for menu', menuId, 'to', variant);
-        }
 
         function updateQuantity(menuId, change) {
             if (!cart[menuId]) {
@@ -662,8 +661,6 @@
 
             document.getElementById(`qty-${menuId}`).textContent = cart[menuId];
             updateCart();
-
-            console.log('Quantity updated for menu', menuId, 'to', cart[menuId]);
         }
 
         function increaseQuantity(menuId) {
@@ -678,32 +675,19 @@
             const cartItems = document.getElementById('cartItems');
             const totalItemsElement = document.getElementById('totalItems');
             const orderBtn = document.getElementById('orderBtn');
-            const itemsInput = document.getElementById('itemsInput');
 
             let cartHTML = '';
             totalItems = 0;
-            let items = [];
-
-            // Variant labels for display
-            const variantLabels = {
-                'less_sugar': 'Kurang Manis',
-                'normal': 'Normal',
-                'no_sugar': 'Tanpa Gula'
-            };
 
             for (let menuId in cart) {
                 if (cart[menuId] > 0) {
-                    const menuElement = document.querySelector(`[data-menu-id="${menuId}"]`);
-                    const menuName = menuElement.querySelector('.menu-name').textContent;
-                    const variantLabel = variantLabels[variants[menuId]] || 'Normal';
+                    const menuName = menuData[menuId];
 
                     cartHTML += `
                         <div class="cart-item">
                             <div>
                                 <div class="fw-bold">${menuName}</div>
-                                <small class="text-muted">
-                                    <i class="fas fa-sliders-h"></i> ${variantLabel} | Qty: ${cart[menuId]}
-                                </small>
+                                <small class="text-muted">Qty: ${cart[menuId]}</small>
                             </div>
                             <div class="fw-bold text-success">
                                 <i class="fas fa-check-circle"></i>
@@ -712,15 +696,10 @@
                     `;
 
                     totalItems += cart[menuId];
-                    items.push({
-                        menu_id: parseInt(menuId),
-                        quantity: parseInt(cart[menuId]),
-                        variant: variants[menuId]
-                    });
                 }
             }
 
-            if (items.length === 0) {
+            if (totalItems === 0) {
                 cartHTML = `
                     <div class="empty-cart">
                         <i class="fas fa-shopping-cart fa-2x text-muted"></i>
@@ -734,80 +713,86 @@
 
             cartItems.innerHTML = cartHTML;
             totalItemsElement.textContent = totalItems;
-            itemsInput.value = JSON.stringify(items);
+        }
 
-            console.log('Cart updated:', items);
+        function showOrderModal() {
+            const container = document.getElementById('orderDetailsContainer');
+            let html = '';
+            let itemIndex = 0;
+
+            for (let menuId in cart) {
+                if (cart[menuId] > 0) {
+                    const menuName = menuData[menuId];
+
+                    html += `
+                        <div class="order-item">
+                            <div class="order-item-header">
+                                <i class="fas fa-coffee"></i> ${menuName}
+                            </div>
+                    `;
+
+                    // Create inputs for each quantity
+                    for (let i = 0; i < cart[menuId]; i++) {
+                        html += `
+                            <div class="item-detail">
+                                <div class="item-number">Item #${itemIndex + 1}</div>
+
+                                <input type="hidden" name="items[${itemIndex}][menu_id]" value="${menuId}">
+
+                                <div class="mb-2">
+                                    <label class="form-label">
+                                        <i class="fas fa-user"></i> Untuk Siapa?
+                                    </label>
+                                    <select name="items[${itemIndex}][employee]" class="form-select" required>
+                                        <option value="Guest">Guest</option>
+                                        <option value="Budi Santoso">Budi Santoso</option>
+                                        <option value="Siti Rahayu">Siti Rahayu</option>
+                                        <option value="Ahmad Wijaya">Ahmad Wijaya</option>
+                                        <option value="Dewi Lestari">Dewi Lestari</option>
+                                        <option value="Eko Prasetyo">Eko Prasetyo</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label class="form-label">
+                                        <i class="fas fa-sliders-h"></i> Varian Rasa
+                                    </label>
+                                    <select name="items[${itemIndex}][variant]" class="form-select" required>
+                                        <option value="less_sugar">🙂 Kurang Manis</option>
+                                        <option value="normal">😊 Normal</option>
+                                        <option value="no_sugar">🚫 Tanpa Gula</option>
+                                    </select>
+                                </div>
+                            </div>
+                        `;
+                        itemIndex++;
+                    }
+
+                    html += `</div>`;
+                }
+            }
+
+            container.innerHTML = html;
+
+            // Show modal
+            if (!orderModal) {
+                orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+            }
+            orderModal.show();
         }
 
         // Form submission
         document.getElementById('orderForm').addEventListener('submit', function(e) {
-            const itemsInput = document.getElementById('itemsInput');
+            e.preventDefault();
 
-            try {
-                const items = JSON.parse(itemsInput.value);
+            // Show loading state
+            const submitBtn = this.querySelector('.btn-submit-order');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            submitBtn.disabled = true;
 
-                console.log('Form submitted with items:', items);
-                console.log('Items input value:', itemsInput.value);
-                console.log('Room ID:', document.querySelector('input[name="room_id"]').value);
-                console.log('CSRF Token:', document.querySelector('input[name="_token"]').value);
-
-                if (!items || items.length === 0) {
-                    e.preventDefault();
-                    alert('Pilih minimal satu menu untuk dipesan!');
-                    return false;
-                }
-
-                // Show loading state
-                const orderBtn = document.getElementById('orderBtn');
-                orderBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
-                orderBtn.disabled = true;
-
-                // Let the form submit naturally
-                return true;
-
-            } catch (error) {
-                console.error('Error parsing items:', error);
-                e.preventDefault();
-                alert('Terjadi kesalahan saat memproses pesanan. Silakan coba lagi.');
-                return false;
-            }
-        });
-
-        // Debug cart on page load
-        console.log('Page loaded, initial cart:', cart);
-        console.log('Initial items input value:', document.getElementById('itemsInput').value);
-
-        // Test form submission
-        console.log('Form action:', document.getElementById('orderForm').action);
-        console.log('Form method:', document.getElementById('orderForm').method);
-        console.log('CSRF token exists:', !!document.querySelector('input[name="_token"]'));
-        console.log('Room ID exists:', !!document.querySelector('input[name="room_id"]'));
-        console.log('Items input exists:', !!document.getElementById('itemsInput'));
-
-        // Test button click
-        document.getElementById('orderBtn').addEventListener('click', function(e) {
-            console.log('Order button clicked');
-            console.log('Button disabled:', this.disabled);
-            console.log('Current cart:', cart);
-            console.log('Items input value:', document.getElementById('itemsInput').value);
-
-            if (this.disabled) {
-                e.preventDefault();
-                console.log('Button is disabled, preventing form submission');
-                return false;
-            }
-        });
-
-        // Test quantity buttons
-        document.querySelectorAll('.btn-quantity').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                console.log('Quantity button clicked:', this);
-            });
-        });
-
-        // Test menu cards
-        document.querySelectorAll('.menu-card').forEach(card => {
-            console.log('Menu card found:', card.dataset.menuId);
+            // Submit form
+            this.submit();
         });
     </script>
 </body>
