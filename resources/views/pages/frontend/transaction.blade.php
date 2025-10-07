@@ -532,7 +532,7 @@
                 <!-- Image -->
                 <div class="menu-image">
                     @if($menu->image)
-                        <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}">
+                        <img src="{{ Storage::url($menu->image) }}" alt="{{ $menu->name }}">
                     @else
                         <div class="no-image">
                             <i class="fas fa-image"></i>

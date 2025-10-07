@@ -38,7 +38,7 @@
             </td>
             <td>
               @if($menu->image)
-                <img src="{{ asset('storage/' . $menu->image) }}" alt="{{ $menu->name }}" style="max-width: 50px; max-height: 50px;">
+                <img src="{{ Storage::url($menu->image) }}" alt="{{ $menu->name }}" style="max-width: 50px; max-height: 50px;">
               @else
                 <span class="text-muted">No Image</span>
               @endif
