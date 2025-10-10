@@ -604,23 +604,25 @@
                         <!-- Location Selection -->
                         <div class="order-item" style="margin-bottom: 20px;">
                             <div class="order-item-header">
-                                <i class="fas fa-map-marker-alt"></i> Lokasi Pengiriman
+                                <i class="fas fa-door-open"></i> Pilih Room
                             </div>
                             <div class="item-detail">
                                 <label class="form-label">
-                                    <i class="fas fa-location-arrow"></i> Pilih Lokasi
+                                    <i class="fas fa-location-arrow"></i> Room Tujuan
                                 </label>
                                 <select name="location" class="form-select" required>
-                                    <option value="">-- Pilih Lokasi --</option>
-                                    <option value="Ruang Meeting 1">Ruang Meeting 1</option>
-                                    <option value="Ruang Meeting 2">Ruang Meeting 2</option>
-                                    <option value="Ruang Meeting 3">Ruang Meeting 3</option>
-                                    <option value="Kantor Utama">Kantor Utama</option>
-                                    <option value="Lobby">Lobby</option>
-                                    <option value="Cafeteria">Cafeteria</option>
-                                    <option value="Ruang Kerja 1">Ruang Kerja 1</option>
-                                    <option value="Ruang Kerja 2">Ruang Kerja 2</option>
+                                    <option value="">-- Pilih Room --</option>
+                                    @forelse($room->roomDetails as $detail)
+                                        <option value="{{ $detail->name }}">{{ $detail->name }}</option>
+                                    @empty
+                                        <option value="" disabled>No rooms available</option>
+                                    @endforelse
                                 </select>
+                                @if($room->roomDetails->count() == 0)
+                                    <small class="text-danger">
+                                        <i class="fas fa-exclamation-triangle"></i> Belum ada room yang tersedia untuk office ini. Hubungi admin.
+                                    </small>
+                                @endif
                             </div>
                         </div>
 
@@ -745,11 +747,9 @@
                                     </label>
                                     <select name="items[${itemIndex}][employee]" class="form-select" required>
                                         <option value="Guest">Guest</option>
-                                        <option value="Budi Santoso">Budi Santoso</option>
-                                        <option value="Siti Rahayu">Siti Rahayu</option>
-                                        <option value="Ahmad Wijaya">Ahmad Wijaya</option>
-                                        <option value="Dewi Lestari">Dewi Lestari</option>
-                                        <option value="Eko Prasetyo">Eko Prasetyo</option>
+                                        @foreach($employees as $employee)
+                                            <option value="{{ $employee->name }}">{{ $employee->name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 

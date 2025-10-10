@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Dashboard\MenuController;
 use App\Http\Controllers\Dashboard\RoomController;
+use App\Http\Controllers\Dashboard\EmployeeController;
 use App\Http\Controllers\Dashboard\TransactionController;
 use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.update');
     Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
     Route::get('/rooms/{room}/barcode', [RoomController::class, 'barcode'])->name('rooms.barcode');
+
+    //Room Details (Locations)
+    Route::post('/rooms/{room}/details', [RoomController::class, 'storeDetail'])->name('rooms.details.store');
+    Route::put('/room-details/{roomDetail}', [RoomController::class, 'updateDetail'])->name('rooms.details.update');
+    Route::delete('/room-details/{roomDetail}', [RoomController::class, 'destroyDetail'])->name('rooms.details.destroy');
+
+    //Employees
+    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
+    Route::put('/employees/{employee}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
     //Transactions
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');

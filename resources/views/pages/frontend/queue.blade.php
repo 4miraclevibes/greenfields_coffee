@@ -434,7 +434,7 @@
                         <div class="queue-info">
                             <div class="room-name">{{ $transaction->room->name }}</div>
                             <div class="order-time" style="margin-bottom: 5px;">
-                                <i class="fas fa-map-marker-alt"></i> {{ $transaction->location }}
+                                <i class="fas fa-building"></i> {{ $transaction->location }}
                             </div>
                             <div class="order-time">
                                 <i class="fas fa-clock"></i> {{ $transaction->created_at->format('H:i') }}

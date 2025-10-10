@@ -313,7 +313,7 @@
             </div>
 
             <div class="mb-3">
-                <strong>Ruangan:</strong> {{ $transaction->room->name }}<br>
+                <strong>Office:</strong> {{ $transaction->room->name }}<br>
                 <strong>Lokasi Kirim:</strong> {{ $transaction->location }}<br>
                 <strong>Waktu Pesan:</strong> {{ $transaction->created_at->format('d/m/Y H:i') }}<br>
                 <strong>ID Pesanan:</strong> #{{ $transaction->id }}

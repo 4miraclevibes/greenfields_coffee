@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Room;
+use App\Models\Employee;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
@@ -14,10 +15,11 @@ class LandingController extends Controller
 {
     public function transaction($roomId)
     {
-        $room = Room::findOrFail($roomId);
+        $room = Room::with('roomDetails')->findOrFail($roomId);
         $menus = Menu::where('is_available', true)->get();
+        $employees = Employee::orderBy('name', 'asc')->get();
 
-        return view('pages.frontend.transaction', compact('room', 'menus'));
+        return view('pages.frontend.transaction', compact('room', 'menus', 'employees'));
     }
 
     public function storeTransaction(Request $request)
@@ -170,8 +172,8 @@ class LandingController extends Controller
         $message = "☕ *PESANAN KOPI BARU!*\n\n"
             . "*{$selectedIntro}!*\n\n"
             . "ID Pesanan: *#{$transaction->id}*\n"
-            . "Ruangan: *{$transaction->room->name}*\n"
-            . "Lokasi Kirim: *{$transaction->location}*\n"
+            . "Office: *{$transaction->room->name}*\n"
+            . "Ruangan: *{$transaction->location}*\n"
             . "Waktu Pesan: *{$transaction->created_at->format('d/m/Y H:i')}*\n"
             . "Status: *" . ucfirst($transaction->status) . "*\n\n"
             . "*Detail Pesanan ({$transaction->transactionDetails->count()} Item):*\n";

@@ -20,6 +20,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
+            'phone' => 'nullable|string|max:20',
             'password' => 'required|confirmed|min:8',
         ]);
 
@@ -34,16 +35,16 @@ class UserController extends Controller
         $request->validate([
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|unique:users,email,' . $id,
+            'phone' => 'nullable|string|max:20',
             'password' => 'nullable|confirmed|min:8',
         ]);
 
         $user = User::findOrFail($id);
 
-        // Hanya ambil field name dan email (exclude password dan password_confirmation)
-        $data = $request->only(['name', 'email']);
+        // Hanya ambil field name, email, dan phone (exclude password dan password_confirmation)
+        $data = $request->only(['name', 'email', 'phone']);
 
         // Hanya update password jika diisi
-
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }

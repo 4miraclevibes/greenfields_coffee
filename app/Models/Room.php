@@ -15,4 +15,9 @@ class Room extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public function roomDetails(): HasMany
+    {
+        return $this->hasMany(RoomDetail::class);
+    }
 }

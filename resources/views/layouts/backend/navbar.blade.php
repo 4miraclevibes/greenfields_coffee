@@ -40,11 +40,19 @@
                 </a>
               </li>
 
-              <!-- Rooms -->
+              <!-- Offices -->
               <li class="menu-item {{ Route::is('rooms*') ? 'active' : '' }}">
                 <a href="{{ route('rooms.index') }}" class="menu-link">
                   <i class="menu-icon tf-icons bx bxs-building"></i>
-                  <div data-i18n="Rooms">Rooms</div>
+                  <div data-i18n="Offices">Offices</div>
+                </a>
+              </li>
+
+              <!-- Employees -->
+              <li class="menu-item {{ Route::is('employees*') ? 'active' : '' }}">
+                <a href="{{ route('employees.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bxs-user-account"></i>
+                  <div data-i18n="Employees">Employees</div>
                 </a>
               </li>
 

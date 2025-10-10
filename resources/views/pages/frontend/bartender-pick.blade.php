@@ -525,8 +525,8 @@
 
                 <div class="order-info">
                     <div class="info-row">
-                        <i class="fas fa-door-open" style="color: #4a7c59;"></i>
-                        <span class="info-label">Ruangan:</span>
+                        <i class="fas fa-building" style="color: #4a7c59;"></i>
+                        <span class="info-label">Office:</span>
                         <span class="info-value">{{ $transaction->room->name }}</span>
                     </div>
                     <div class="info-row">
@@ -645,7 +645,7 @@
                 </div>
                 <div class="confirm-detail-row">
                     <span class="confirm-detail-label">
-                        <i class="fas fa-door-open"></i> Ruangan:
+                        <i class="fas fa-building"></i> Office:
                     </span>
                     <span class="confirm-detail-value">${room}</span>
                 </div>

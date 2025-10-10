@@ -19,6 +19,7 @@
             <th class="text-white">No</th>
             <th class="text-white">Name</th>
             <th class="text-white">Email</th>
+            <th class="text-white">Phone</th>
             <th class="text-white">Actions</th>
           </tr>
         </thead>
@@ -28,9 +29,10 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
+            <td>{{ $user->phone ?? '-' }}</td>
             <td>
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editUserModal"
-                        onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}')">
+                        onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}', '{{ $user->phone }}')">
                   Edit
                 </button>
                 <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline-block;">
@@ -70,6 +72,13 @@
             <label for="create_email" class="form-label">Email <span class="text-danger">*</span></label>
             <input type="email" class="form-control @error('email') is-invalid @enderror" id="create_email" name="email" value="{{ old('email') }}" required>
             @error('email')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+          <div class="mb-3">
+            <label for="create_phone" class="form-label">Phone</label>
+            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="create_phone" name="phone" value="{{ old('phone') }}" placeholder="contoh: 628123456789">
+            @error('phone')
               <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
@@ -121,6 +130,13 @@
             @enderror
           </div>
           <div class="mb-3">
+            <label for="edit_phone" class="form-label">Phone</label>
+            <input type="text" class="form-control @error('phone') is-invalid @enderror" id="edit_phone" name="phone" placeholder="contoh: 628123456789">
+            @error('phone')
+              <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+          </div>
+          <div class="mb-3">
             <label for="edit_password" class="form-label">New Password (leave blank to keep current)</label>
             <input type="password" class="form-control @error('password') is-invalid @enderror" id="edit_password" name="password">
             @error('password')
@@ -142,13 +158,14 @@
 </div>
 
 <script>
-function editUser(id, name, email) {
+function editUser(id, name, email, phone) {
   // Set form action
   document.getElementById('editUserForm').action = `/users/${id}`;
 
   // Set form values
   document.getElementById('edit_name').value = name;
   document.getElementById('edit_email').value = email;
+  document.getElementById('edit_phone').value = phone || '';
 
   // Clear password fields
   document.getElementById('edit_password').value = '';

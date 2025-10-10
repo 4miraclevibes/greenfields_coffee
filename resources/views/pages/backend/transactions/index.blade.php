@@ -11,7 +11,7 @@
           <tr class="text-nowrap table-dark">
             <th class="text-white">No</th>
             <th class="text-white">User</th>
-            <th class="text-white">Room</th>
+            <th class="text-white">Office</th>
             <th class="text-white">Location</th>
             <th class="text-white">Status</th>
             <th class="text-white">Items</th>
@@ -81,7 +81,7 @@
             <strong>User:</strong> <span id="detail_user"></span>
           </div>
           <div class="col-md-3">
-            <strong>Room:</strong> <span id="detail_room"></span>
+            <strong>Office:</strong> <span id="detail_room"></span>
           </div>
           <div class="col-md-3">
             <strong>Location:</strong> <span id="detail_location"></span>
