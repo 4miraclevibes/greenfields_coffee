@@ -522,7 +522,7 @@
             <h1 class="room-title">
                 <i class="fas fa-coffee"></i> {{ $room->name }}
             </h1>
-            <p class="text-muted mb-0">Pilih menu kopi yang ingin dipesan</p>
+            <p class="text-muted mb-0">Please select your order</p>
         </div>
 
         <!-- Menu List -->
@@ -566,21 +566,21 @@
         <div class="cart-summary">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">
-                    <i class="fas fa-shopping-cart"></i> Pesanan
+                    <i class="fas fa-shopping-cart"></i> Order
                 </h5>
                 <button type="button" class="btn btn-order" id="orderBtn" disabled onclick="showOrderModal()">
-                    <i class="fas fa-check"></i> Pesan Sekarang
+                    <i class="fas fa-check"></i> Order Now
                 </button>
             </div>
             <div id="cartItems">
                 <div class="empty-cart">
                     <i class="fas fa-shopping-cart fa-2x text-muted"></i>
-                    <p>Belum ada item di pesanan</p>
+                    <p>No items in your order yet</p>
                 </div>
             </div>
             <div class="mt-3">
                 <div class="d-flex justify-content-center">
-                    <span class="total-price">Total Item: <span id="totalItems">0</span></span>
+                    <span class="total-price">Total Items: <span id="totalItems">0</span></span>
                 </div>
             </div>
         </div>
@@ -592,7 +592,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="orderModalLabel">
-                        <i class="fas fa-clipboard-list"></i> Detail Pesanan
+                        <i class="fas fa-clipboard-list"></i> Order Details
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -604,14 +604,14 @@
                         <!-- Location Selection -->
                         <div class="order-item" style="margin-bottom: 20px;">
                             <div class="order-item-header">
-                                <i class="fas fa-door-open"></i> Pilih Room
+                                <i class="fas fa-door-open"></i> Select Room
                             </div>
                             <div class="item-detail">
                                 <label class="form-label">
-                                    <i class="fas fa-location-arrow"></i> Room Tujuan
+                                    <i class="fas fa-location-arrow"></i> Destination Room
                                 </label>
                                 <select name="location" class="form-select" required>
-                                    <option value="">-- Pilih Room --</option>
+                                    <option value="">-- Select Room --</option>
                                     @forelse($room->roomDetails as $detail)
                                         <option value="{{ $detail->name }}">{{ $detail->name }}</option>
                                     @empty
@@ -620,7 +620,7 @@
                                 </select>
                                 @if($room->roomDetails->count() == 0)
                                     <small class="text-danger">
-                                        <i class="fas fa-exclamation-triangle"></i> Belum ada room yang tersedia untuk office ini. Hubungi admin.
+                                        <i class="fas fa-exclamation-triangle"></i> No rooms available for this office yet. Please contact admin.
                                     </small>
                                 @endif
                             </div>
@@ -628,7 +628,7 @@
 
                         <div id="orderDetailsContainer"></div>
                         <button type="submit" class="btn btn-submit-order mt-3">
-                            <i class="fas fa-paper-plane"></i> Kirim Pesanan
+                            <i class="fas fa-paper-plane"></i> Submit Order
                         </button>
                     </form>
                 </div>
@@ -705,7 +705,7 @@
                 cartHTML = `
                     <div class="empty-cart">
                         <i class="fas fa-shopping-cart fa-2x text-muted"></i>
-                        <p>Belum ada item di pesanan</p>
+                        <p>No items in your order yet</p>
                     </div>
                 `;
                 orderBtn.disabled = true;
@@ -743,7 +743,7 @@
 
                                 <div class="mb-2">
                                     <label class="form-label">
-                                        <i class="fas fa-user"></i> Untuk Siapa?
+                                        <i class="fas fa-user"></i> For Whom?
                                     </label>
                                     <select name="items[${itemIndex}][employee]" class="form-select" required>
                                         <option value="Guest">Guest</option>
@@ -755,12 +755,12 @@
 
                                 <div class="mb-0">
                                     <label class="form-label">
-                                        <i class="fas fa-sliders-h"></i> Varian Rasa
+                                        <i class="fas fa-sliders-h"></i> Taste Variant
                                     </label>
                                     <select name="items[${itemIndex}][variant]" class="form-select" required>
-                                        <option value="less_sugar">🙂 Kurang Manis</option>
+                                        <option value="less_sugar">🙂 Less Sweet</option>
                                         <option value="normal">😊 Normal</option>
-                                        <option value="no_sugar">🚫 Tanpa Gula</option>
+                                        <option value="no_sugar">🚫 No Sugar</option>
                                     </select>
                                 </div>
                             </div>
@@ -788,7 +788,7 @@
             // Show loading state
             const submitBtn = this.querySelector('.btn-submit-order');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             submitBtn.disabled = true;
 
             // Submit form

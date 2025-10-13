@@ -282,24 +282,24 @@
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h1 class="success-title">Pesanan Berhasil!</h1>
+            <h1 class="success-title">Order Successful!</h1>
             <p class="success-subtitle">
-                Terima kasih telah memesan kopi di {{ $transaction->room->name }}
+                Thank you for ordering coffee at {{ $transaction->room->name }}
             </p>
             <span class="status-badge status-{{ $transaction->status }}">
                 @if($transaction->status == 'pending')
-                    <i class="fas fa-clock status-icon"></i> Menunggu
+                    <i class="fas fa-clock status-icon"></i> Pending
                 @elseif($transaction->status == 'process')
-                    <i class="fas fa-spinner fa-spin status-icon"></i> Diproses
+                    <i class="fas fa-spinner fa-spin status-icon"></i> In Progress
                 @elseif($transaction->status == 'completed')
-                    <i class="fas fa-check-circle status-icon"></i> Selesai
+                    <i class="fas fa-check-circle status-icon"></i> Completed
                 @elseif($transaction->status == 'canceled')
-                    <i class="fas fa-times-circle status-icon"></i> Dibatalkan
+                    <i class="fas fa-times-circle status-icon"></i> Cancelled
                 @endif
             </span>
             @if($transaction->status == 'process' && $transaction->user->name != 'Admin')
                 <div class="responsible-person">
-                    <i class="fas fa-user"></i> Diproses oleh: <strong>{{ $transaction->user->name }}</strong>
+                    <i class="fas fa-user"></i> Processed by: <strong>{{ $transaction->user->name }}</strong>
                 </div>
             @endif
         </div>
@@ -308,18 +308,18 @@
         <div class="order-details">
             <div class="order-header">
                 <h5 class="mb-0">
-                    <i class="fas fa-receipt"></i> Detail Pesanan
+                    <i class="fas fa-receipt"></i> Order Details
                 </h5>
             </div>
 
             <div class="mb-3">
                 <strong>Office:</strong> {{ $transaction->room->name }}<br>
-                <strong>Lokasi Kirim:</strong> {{ $transaction->location }}<br>
-                <strong>Waktu Pesan:</strong> {{ $transaction->created_at->format('d/m/Y H:i') }}<br>
-                <strong>ID Pesanan:</strong> #{{ $transaction->id }}
+                <strong>Delivery Location:</strong> {{ $transaction->location }}<br>
+                <strong>Order Time:</strong> {{ $transaction->created_at->format('d/m/Y H:i') }}<br>
+                <strong>Order ID:</strong> #{{ $transaction->id }}
             </div>
 
-            <h6 class="mb-3">Item yang dipesan:</h6>
+            <h6 class="mb-3">Ordered Items:</h6>
             @foreach($transaction->transactionDetails as $detail)
             <div class="order-item">
                 <div>
@@ -328,11 +328,11 @@
                         <i class="fas fa-user"></i> {{ $detail->employee }} |
                         <i class="fas fa-sliders-h"></i>
                         @if($detail->variant == 'less_sugar')
-                            Kurang Manis
+                            Less Sweet
                         @elseif($detail->variant == 'normal')
                             Normal
                         @elseif($detail->variant == 'no_sugar')
-                            Tanpa Gula
+                            No Sugar
                         @endif
                     </div>
                 </div>
@@ -345,7 +345,7 @@
             <div class="total-section">
                 <div class="d-flex justify-content-center align-items-center">
                     <span class="total-price">
-                        <i class="fas fa-coffee"></i> Total {{ $transaction->transactionDetails->sum('quantity') }} Item
+                        <i class="fas fa-coffee"></i> Total {{ $transaction->transactionDetails->sum('quantity') }} Items
                     </span>
                 </div>
             </div>
@@ -353,13 +353,13 @@
 
         <!-- Action Button -->
         <button class="btn btn-home" onclick="window.location.href='{{ route('transaction', $transaction->room_id) }}'">
-            <i class="fas fa-coffee"></i> Pesan Lagi
+            <i class="fas fa-coffee"></i> Order Again
         </button>
     </div>
 
     <!-- Refresh Indicator -->
     <div class="refresh-indicator" id="refreshIndicator">
-        <i class="fas fa-sync-alt fa-spin"></i> Memperbarui status...
+        <i class="fas fa-sync-alt fa-spin"></i> Updating status...
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

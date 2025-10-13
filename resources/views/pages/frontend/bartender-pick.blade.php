@@ -488,9 +488,9 @@
         <!-- Header -->
         <div class="header text-center">
             <h1 class="header-title">
-                <i class="fas fa-tasks"></i> Ambil Pesanan
+                <i class="fas fa-tasks"></i> Pick Order
             </h1>
-            <p class="header-subtitle">Pilih pesanan yang ingin Anda proses</p>
+            <p class="header-subtitle">Select the order you want to process</p>
             <div class="bartender-info">
                 <i class="fas fa-user-circle"></i>
                 <span>{{ auth()->user()->name }}</span>
@@ -531,14 +531,14 @@
                     </div>
                     <div class="info-row">
                         <i class="fas fa-map-marker-alt" style="color: #4a7c59;"></i>
-                        <span class="info-label">Lokasi:</span>
+                        <span class="info-label">Location:</span>
                         <span class="info-value">{{ $transaction->location }}</span>
                     </div>
                 </div>
 
                 <div class="order-items">
                     <div class="order-items-title">
-                        <i class="fas fa-list"></i> Detail Pesanan ({{ $transaction->transactionDetails->count() }} Item)
+                        <i class="fas fa-list"></i> Order Details ({{ $transaction->transactionDetails->count() }} Items)
                     </div>
                     @foreach($transaction->transactionDetails as $detail)
                     <div class="item-row">
@@ -548,11 +548,11 @@
                                 <i class="fas fa-user"></i> {{ $detail->employee }} |
                                 <i class="fas fa-sliders-h"></i>
                                 @if($detail->variant == 'less_sugar')
-                                    Kurang Manis
+                                    Less Sweet
                                 @elseif($detail->variant == 'normal')
                                     Normal
                                 @elseif($detail->variant == 'no_sugar')
-                                    Tanpa Gula
+                                    No Sugar
                                 @endif
                             </div>
                         </div>
@@ -569,7 +569,7 @@
                             data-location="{{ $transaction->location }}"
                             data-items="{{ $transaction->transactionDetails->count() }}"
                             onclick="showConfirm(this)">
-                        <i class="fas fa-hand-paper"></i> Ambil Pesanan Ini
+                        <i class="fas fa-hand-paper"></i> Pick This Order
                     </button>
                 </form>
             </div>
@@ -578,8 +578,8 @@
                 <div class="empty-icon">
                     <i class="fas fa-coffee"></i>
                 </div>
-                <h3 class="empty-title">Tidak Ada Pesanan</h3>
-                <p class="empty-text">Saat ini tidak ada pesanan yang perlu diproses. Silakan refresh halaman untuk melihat pesanan baru.</p>
+                <h3 class="empty-title">No Orders</h3>
+                <p class="empty-text">There are currently no orders to process. Please refresh the page to see new orders.</p>
             </div>
             @endforelse
         </div>
@@ -597,21 +597,21 @@
                 <div class="confirm-icon">
                     <i class="fas fa-hand-paper"></i>
                 </div>
-                <h3 class="confirm-title">Konfirmasi Ambil Pesanan</h3>
+                <h3 class="confirm-title">Confirm Pick Order</h3>
             </div>
             <div class="confirm-body">
                 <p class="confirm-text">
-                    Apakah Anda yakin ingin mengambil pesanan ini? Pesanan akan langsung masuk ke daftar Anda untuk diproses.
+                    Are you sure you want to pick this order? The order will immediately be added to your processing list.
                 </p>
                 <div class="confirm-details" id="confirmDetails">
                     <!-- Details will be inserted by JavaScript -->
                 </div>
                 <div class="confirm-buttons">
                     <button type="button" class="btn-confirm-cancel" onclick="hideConfirm()">
-                        <i class="fas fa-times"></i> Batal
+                        <i class="fas fa-times"></i> Cancel
                     </button>
                     <button type="button" class="btn-confirm-yes" onclick="submitOrder()">
-                        <i class="fas fa-check"></i> Ya, Ambil!
+                        <i class="fas fa-check"></i> Yes, Pick It!
                     </button>
                 </div>
             </div>
@@ -651,15 +651,15 @@
                 </div>
                 <div class="confirm-detail-row">
                     <span class="confirm-detail-label">
-                        <i class="fas fa-map-marker-alt"></i> Lokasi:
+                        <i class="fas fa-map-marker-alt"></i> Location:
                     </span>
                     <span class="confirm-detail-value">${location}</span>
                 </div>
                 <div class="confirm-detail-row">
                     <span class="confirm-detail-label">
-                        <i class="fas fa-coffee"></i> Total Item:
-                    </span>
-                    <span class="confirm-detail-value">${items} Item</span>
+                                <i class="fas fa-coffee"></i> Total Items:
+                            </span>
+                            <span class="confirm-detail-value">${items} Items</span>
                 </div>
             `;
 
@@ -685,7 +685,7 @@
                 // Update button text
                 const btn = formToSubmit.querySelector('.btn-pick');
                 if (btn) {
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                     btn.disabled = true;
                 }
 

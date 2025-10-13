@@ -400,7 +400,7 @@
     <div class="queue-container">
         <!-- Header -->
         <div class="header">
-            <h1><i class="fas fa-coffee"></i> Antrian Pesanan</h1>
+            <h1><i class="fas fa-coffee"></i> Order Queue</h1>
             <p class="subtitle">Greenfields Coffee - {{ date('d F Y') }}</p>
         </div>
 
@@ -408,19 +408,19 @@
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-number" id="totalOrders">{{ $transactions->count() }}</div>
-                <div class="stat-label">Total Pesanan</div>
+                <div class="stat-label">Total Orders</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="pendingOrders">{{ $transactions->where('status', 'pending')->count() }}</div>
-                <div class="stat-label">Menunggu</div>
+                <div class="stat-label">Pending</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="completedOrders">{{ $transactions->where('status', 'completed')->count() }}</div>
-                <div class="stat-label">Selesai</div>
+                <div class="stat-label">Completed</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" id="canceledOrders">{{ $transactions->where('status', 'canceled')->count() }}</div>
-                <div class="stat-label">Dibatalkan</div>
+                <div class="stat-label">Cancelled</div>
             </div>
         </div>
 
@@ -441,7 +441,7 @@
                             </div>
                             @if($transaction->status == 'process' && $transaction->user->name != 'Admin')
                                 <div class="responsible-person" style="margin: 8px 0; padding: 6px 12px; background: rgba(23, 162, 184, 0.1); border-radius: 15px; font-size: 0.9rem; color: #138496;">
-                                    <i class="fas fa-user"></i> Penanggung Jawab: <strong>{{ $transaction->user->name }}</strong>
+                                    <i class="fas fa-user"></i> Responsible Person: <strong>{{ $transaction->user->name }}</strong>
                                 </div>
                             @endif
                             <span class="status-badge status-{{ $transaction->status }}">
@@ -449,7 +449,7 @@
                             </span>
                         </div>
                         <div class="order-items">
-                            <h6><i class="fas fa-list"></i> Detail Pesanan</h6>
+                            <h6><i class="fas fa-list"></i> Order Details</h6>
                             @foreach($transaction->transactionDetails as $detail)
                             <div class="order-item">
                                 <div>
@@ -458,11 +458,11 @@
                                         <i class="fas fa-user"></i> {{ $detail->employee }} |
                                         <i class="fas fa-sliders-h"></i>
                                         @if($detail->variant == 'less_sugar')
-                                            Kurang Manis
+                                            Less Sweet
                                         @elseif($detail->variant == 'normal')
                                             Normal
                                         @elseif($detail->variant == 'no_sugar')
-                                            Tanpa Gula
+                                            No Sugar
                                         @endif
                                     </div>
                                 </div>
@@ -476,8 +476,8 @@
             @else
                 <div class="no-orders">
                     <i class="fas fa-coffee"></i>
-                    <h3>Belum Ada Pesanan</h3>
-                    <p>Antrian akan muncul di sini ketika ada pesanan masuk</p>
+                    <h3>No Orders Yet</h3>
+                    <p>Orders will appear here when they come in</p>
                 </div>
             @endif
         </div>
@@ -485,7 +485,7 @@
 
     <!-- Refresh Indicator -->
     <div class="refresh-indicator" id="refreshIndicator">
-        <i class="fas fa-sync-alt fa-spin"></i>Test...
+        <i class="fas fa-sync-alt fa-spin"></i> Updating...
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
