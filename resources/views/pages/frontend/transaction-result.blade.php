@@ -326,14 +326,21 @@
                     <div class="item-name">{{ $detail->menu->name }}</div>
                     <div class="item-quantity">
                         <i class="fas fa-user"></i> {{ $detail->employee }} |
-                        <i class="fas fa-sliders-h"></i>
-                        @if($detail->variant == 'less_sugar')
-                            Less Sweet
-                        @elseif($detail->variant == 'normal')
-                            Normal
-                        @elseif($detail->variant == 'no_sugar')
-                            No Sugar
-                        @endif
+                        @php
+                            $variantParts = explode('_', $detail->variant);
+                            $temp = $variantParts[0] ?? 'ice';
+                            $sugar = implode('_', array_slice($variantParts, 1)) ?: 'normal';
+
+                            $tempLabel = $temp == 'ice' ? '🧊 Ice' : '🔥 Hot';
+                            $sugarLabels = [
+                                'less_sugar' => 'Less Sweet',
+                                'normal' => 'Normal',
+                                'no_sugar' => 'No Sugar'
+                            ];
+                            $sugarLabel = $sugarLabels[$sugar] ?? ucfirst(str_replace('_', ' ', $sugar));
+                        @endphp
+                        <i class="fas fa-temperature-low"></i> {{ $tempLabel }} |
+                        <i class="fas fa-sliders-h"></i> {{ $sugarLabel }}
                     </div>
                 </div>
                 <div class="item-price">

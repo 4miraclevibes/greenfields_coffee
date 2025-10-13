@@ -748,16 +748,29 @@
                                     <input type="text" name="items[${itemIndex}][employee]" class="form-control" required placeholder="Enter name">
                                 </div>
 
+                                <div class="mb-2">
+                                    <label class="form-label">
+                                        <i class="fas fa-temperature-low"></i> Temperature
+                                    </label>
+                                    <select class="form-select temp-select" data-index="${itemIndex}" required>
+                                        <option value="ice">🧊 Ice</option>
+                                        <option value="hot">🔥 Hot</option>
+                                    </select>
+                                </div>
+
                                 <div class="mb-0">
                                     <label class="form-label">
                                         <i class="fas fa-sliders-h"></i> Sugar Level
                                     </label>
-                                    <select name="items[${itemIndex}][variant]" class="form-select" required>
+                                    <select class="form-select sugar-select" data-index="${itemIndex}" required>
                                         <option value="less_sugar">🙂 Less Sweet</option>
                                         <option value="normal">😊 Normal</option>
                                         <option value="no_sugar">🚫 No Sugar</option>
                                     </select>
                                 </div>
+
+                                <!-- Hidden field untuk variant (hasil concatenate) -->
+                                <input type="hidden" name="items[${itemIndex}][variant]" class="variant-input" data-index="${itemIndex}" value="ice_normal">
                             </div>
                         `;
                         itemIndex++;
@@ -769,11 +782,37 @@
 
             container.innerHTML = html;
 
+            // Setup event listeners untuk concatenate variant
+            setupVariantListeners();
+
             // Show modal
             if (!orderModal) {
                 orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
             }
             orderModal.show();
+        }
+
+        // Function untuk setup variant listeners
+        function setupVariantListeners() {
+            // Event listener untuk temperature dan sugar changes
+            document.querySelectorAll('.temp-select, .sugar-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    updateVariant(this.dataset.index);
+                });
+            });
+        }
+
+        // Function untuk update variant (concatenate temp + sugar)
+        function updateVariant(index) {
+            const tempSelect = document.querySelector(`.temp-select[data-index="${index}"]`);
+            const sugarSelect = document.querySelector(`.sugar-select[data-index="${index}"]`);
+            const variantInput = document.querySelector(`.variant-input[data-index="${index}"]`);
+
+            if (tempSelect && sugarSelect && variantInput) {
+                const temp = tempSelect.value;
+                const sugar = sugarSelect.value;
+                variantInput.value = `${temp}_${sugar}`;
+            }
         }
 
         // Form submission

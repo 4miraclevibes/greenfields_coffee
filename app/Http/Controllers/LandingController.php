@@ -169,8 +169,14 @@ class LandingController extends Controller
         // Load transaction dengan relasi yang diperlukan
         $transaction = $transaction->load(['room', 'transactionDetails.menu']);
 
-        // Variant labels
-        $variantLabels = [
+        // Temperature labels
+        $tempLabels = [
+            'ice' => '🧊 Ice',
+            'hot' => '🔥 Hot'
+        ];
+
+        // Sugar labels
+        $sugarLabels = [
             'less_sugar' => 'Kurang Manis',
             'normal' => 'Normal',
             'no_sugar' => 'Tanpa Gula'
@@ -189,10 +195,18 @@ class LandingController extends Controller
         // Tambahkan detail menu
         $itemNumber = 1;
         foreach ($transaction->transactionDetails as $detail) {
-            $variantText = $variantLabels[$detail->variant] ?? $detail->variant;
+            // Parse variant (format: ice_less_sugar, hot_normal, dll)
+            $variantParts = explode('_', $detail->variant);
+            $temp = $variantParts[0] ?? 'ice';
+            $sugar = implode('_', array_slice($variantParts, 1)) ?: 'normal';
+
+            $tempText = $tempLabels[$temp] ?? ucfirst($temp);
+            $sugarText = $sugarLabels[$sugar] ?? ucfirst(str_replace('_', ' ', $sugar));
+
             $message .= "{$itemNumber}. {$detail->menu->name}\n"
                 . "   👤 Untuk: {$detail->employee}\n"
-                . "   🎚️ Varian: {$variantText}\n"
+                . "   🌡️ Temp: {$tempText}\n"
+                . "   🎚️ Gula: {$sugarText}\n"
                 . "   📦 Qty: {$detail->quantity}x\n\n";
             $itemNumber++;
         }
