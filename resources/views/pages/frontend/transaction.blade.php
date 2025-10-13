@@ -743,14 +743,9 @@
 
                                 <div class="mb-2">
                                     <label class="form-label">
-                                        <i class="fas fa-user"></i> For Whom?
+                                        <i class="fas fa-user"></i> Name
                                     </label>
-                                    <select name="items[${itemIndex}][employee]" class="form-select" required>
-                                        <option value="Guest">Guest</option>
-                                        @foreach($employees as $employee)
-                                            <option value="{{ $employee->name }}">{{ $employee->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" name="items[${itemIndex}][employee]" class="form-control" required placeholder="Enter name">
                                 </div>
 
                                 <div class="mb-0">

@@ -146,6 +146,14 @@ class LandingController extends Controller
 
     private function sendWhatsappNotification($transaction)
     {
+        // Ambil semua user yang punya nomor HP
+        $users = \App\Models\User::whereNotNull('phone')
+            ->where('phone', '!=', '')
+            ->get();
+
+        // Gabungkan semua nomor HP dengan separator |
+        $targetPhones = $users->pluck('phone')->implode('|');
+
         // Kata-kata intro
         $intro = [
             "Ada pesanan kopi baru nih",
@@ -206,7 +214,7 @@ class LandingController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => array(
-                'target' => '6281261686210', // Nomor admin/bartender
+                'target' => $targetPhones,
                 'message' => $message
             ),
             CURLOPT_HTTPHEADER => array(
