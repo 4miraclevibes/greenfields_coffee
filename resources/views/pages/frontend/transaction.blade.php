@@ -750,11 +750,11 @@
 
                                 <div class="mb-2">
                                     <label class="form-label">
-                                        <i class="fas fa-temperature-low"></i> Temperature
+                                        <i class="fas fa-temperature-low"></i> Hot / Ice
                                     </label>
                                     <select class="form-select temp-select" data-index="${itemIndex}" required>
-                                        <option value="ice">🧊 Ice</option>
                                         <option value="hot">🔥 Hot</option>
+                                        <option value="ice">🧊 Ice</option>
                                     </select>
                                 </div>
 
