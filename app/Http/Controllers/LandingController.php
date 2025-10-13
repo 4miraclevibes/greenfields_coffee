@@ -34,7 +34,7 @@ class LandingController extends Controller
                 'items' => 'required|array|min:1',
                 'items.*.menu_id' => 'required|exists:menus,id',
                 'items.*.employee' => 'required|string|max:255',
-                'items.*.variant' => 'required|in:less_sugar,normal,no_sugar'
+                'items.*.variant' => 'required|string|max:255' // Format: ice_less_sugar, hot_normal, dll
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::error('Validation failed:', $e->errors());
@@ -151,8 +151,8 @@ class LandingController extends Controller
             ->where('phone', '!=', '')
             ->get();
 
-        // Gabungkan semua nomor HP dengan separator |
-        $targetPhones = $users->pluck('phone')->implode('|');
+        // Gabungkan semua nomor HP dengan separator koma dan spasi (format Fonnte)
+        $targetPhones = $users->pluck('phone')->implode(', ');
 
         // Kata-kata intro
         $intro = [

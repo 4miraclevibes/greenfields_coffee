@@ -770,7 +770,7 @@
                                 </div>
 
                                 <!-- Hidden field untuk variant (hasil concatenate) -->
-                                <input type="hidden" name="items[${itemIndex}][variant]" class="variant-input" data-index="${itemIndex}" value="ice_normal">
+                                <input type="hidden" name="items[${itemIndex}][variant]" class="variant-input" data-index="${itemIndex}" value="hot_normal">
                             </div>
                         `;
                         itemIndex++;
@@ -784,6 +784,11 @@
 
             // Setup event listeners untuk concatenate variant
             setupVariantListeners();
+
+            // Initial update untuk semua variant inputs
+            document.querySelectorAll('.variant-input').forEach(input => {
+                updateVariant(input.dataset.index);
+            });
 
             // Show modal
             if (!orderModal) {
