@@ -750,7 +750,7 @@
 
                                 <div class="mb-0">
                                     <label class="form-label">
-                                        <i class="fas fa-sliders-h"></i> Taste Variant
+                                        <i class="fas fa-sliders-h"></i> Sugar Level
                                     </label>
                                     <select name="items[${itemIndex}][variant]" class="form-select" required>
                                         <option value="less_sugar">🙂 Less Sweet</option>
