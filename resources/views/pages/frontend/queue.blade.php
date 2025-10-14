@@ -415,6 +415,10 @@
                 <div class="stat-label">Pending</div>
             </div>
             <div class="stat-card">
+                <div class="stat-number" id="processOrders">{{ $transactions->where('status', 'process')->count() }}</div>
+                <div class="stat-label">Process</div>
+            </div>
+            <div class="stat-card">
                 <div class="stat-number" id="completedOrders">{{ $transactions->where('status', 'completed')->count() }}</div>
                 <div class="stat-label">Completed</div>
             </div>
@@ -440,22 +444,13 @@
                                 <i class="fas fa-clock"></i> {{ $transaction->created_at->format('H:i') }}
                             </div>
 
-                            <!-- Customer/Responsible Person Info -->
+                            <!-- Responsible Person Info (only for process status) -->
                             @if($transaction->status == 'process' && $transaction->user->name != 'Admin')
                                 <div class="responsible-person" style="margin: 12px 0; padding: 12px 16px; background: linear-gradient(135deg, rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.25)); border-radius: 12px; border-left: 4px solid #17a2b8;">
                                     <div style="font-size: 0.75rem; color: #138496; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
                                         <i class="fas fa-user-tie"></i> Responsible Person
                                     </div>
                                     <div style="font-size: 1.1rem; font-weight: bold; color: #0c5460;">
-                                        {{ $transaction->user->name }}
-                                    </div>
-                                </div>
-                            @else
-                                <div class="customer-info" style="margin: 12px 0; padding: 12px 16px; background: linear-gradient(135deg, rgba(74, 124, 89, 0.15), rgba(74, 124, 89, 0.25)); border-radius: 12px; border-left: 4px solid #4a7c59;">
-                                    <div style="font-size: 0.75rem; color: #2d5a27; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
-                                        <i class="fas fa-user"></i> Customer
-                                    </div>
-                                    <div style="font-size: 1.1rem; font-weight: bold; color: #1e3a1c;">
                                         {{ $transaction->user->name }}
                                     </div>
                                 </div>
@@ -471,8 +466,16 @@
                             <div class="order-item">
                                 <div>
                                     <span class="item-name">{{ $detail->menu->name }}</span>
-                                    <div style="font-size: 0.75rem; color: #666; margin-top: 2px;">
-                                        <i class="fas fa-user"></i> {{ $detail->employee }} |
+
+                                    <!-- Customer Name (Employee) - Diperbesar -->
+                                    <div style="margin-top: 6px; padding: 8px 12px; background: linear-gradient(135deg, rgba(74, 124, 89, 0.12), rgba(74, 124, 89, 0.2)); border-radius: 8px; border-left: 3px solid #4a7c59;">
+                                        <div style="font-size: 0.7rem; color: #2d5a27; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px;">
+                                            <i class="fas fa-user"></i> Customer
+                                        </div>
+                                        <div style="font-size: 1rem; font-weight: bold; color: #1e3a1c; margin-bottom: 6px;">
+                                            {{ $detail->employee }}
+                                        </div>
+
                                         @php
                                             $variantParts = explode('_', $detail->variant);
                                             $temp = $variantParts[0] ?? 'ice';
@@ -486,8 +489,11 @@
                                             ];
                                             $sugarLabel = $sugarLabels[$sugar] ?? ucfirst(str_replace('_', ' ', $sugar));
                                         @endphp
-                                        <i class="fas fa-temperature-low"></i> {{ $tempLabel }} |
-                                        <i class="fas fa-sliders-h"></i> {{ $sugarLabel }}
+
+                                        <div style="font-size: 0.75rem; color: #555;">
+                                            <i class="fas fa-temperature-low"></i> {{ $tempLabel }} |
+                                            <i class="fas fa-sliders-h"></i> {{ $sugarLabel }}
+                                        </div>
                                     </div>
                                 </div>
                                 <span class="item-quantity">{{ $detail->quantity }}x</span>
@@ -541,6 +547,7 @@
                 const newStats = {
                     total: doc.getElementById('totalOrders').textContent,
                     pending: doc.getElementById('pendingOrders').textContent,
+                    process: doc.getElementById('processOrders').textContent,
                     completed: doc.getElementById('completedOrders').textContent,
                     canceled: doc.getElementById('canceledOrders').textContent
                 };
@@ -553,6 +560,7 @@
                 // Update statistics
                 document.getElementById('totalOrders').textContent = newStats.total;
                 document.getElementById('pendingOrders').textContent = newStats.pending;
+                document.getElementById('processOrders').textContent = newStats.process;
                 document.getElementById('completedOrders').textContent = newStats.completed;
                 document.getElementById('canceledOrders').textContent = newStats.canceled;
 
