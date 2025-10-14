@@ -439,11 +439,28 @@
                             <div class="order-time">
                                 <i class="fas fa-clock"></i> {{ $transaction->created_at->format('H:i') }}
                             </div>
+
+                            <!-- Customer/Responsible Person Info -->
                             @if($transaction->status == 'process' && $transaction->user->name != 'Admin')
-                                <div class="responsible-person" style="margin: 8px 0; padding: 6px 12px; background: rgba(23, 162, 184, 0.1); border-radius: 15px; font-size: 0.9rem; color: #138496;">
-                                    <i class="fas fa-user"></i> Responsible Person: <strong>{{ $transaction->user->name }}</strong>
+                                <div class="responsible-person" style="margin: 12px 0; padding: 12px 16px; background: linear-gradient(135deg, rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.25)); border-radius: 12px; border-left: 4px solid #17a2b8;">
+                                    <div style="font-size: 0.75rem; color: #138496; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                                        <i class="fas fa-user-tie"></i> Responsible Person
+                                    </div>
+                                    <div style="font-size: 1.1rem; font-weight: bold; color: #0c5460;">
+                                        {{ $transaction->user->name }}
+                                    </div>
+                                </div>
+                            @else
+                                <div class="customer-info" style="margin: 12px 0; padding: 12px 16px; background: linear-gradient(135deg, rgba(74, 124, 89, 0.15), rgba(74, 124, 89, 0.25)); border-radius: 12px; border-left: 4px solid #4a7c59;">
+                                    <div style="font-size: 0.75rem; color: #2d5a27; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                                        <i class="fas fa-user"></i> Customer
+                                    </div>
+                                    <div style="font-size: 1.1rem; font-weight: bold; color: #1e3a1c;">
+                                        {{ $transaction->user->name }}
+                                    </div>
                                 </div>
                             @endif
+
                             <span class="status-badge status-{{ $transaction->status }}">
                                 {{ ucfirst($transaction->status) }}
                             </span>
@@ -460,7 +477,7 @@
                                             $variantParts = explode('_', $detail->variant);
                                             $temp = $variantParts[0] ?? 'ice';
                                             $sugar = implode('_', array_slice($variantParts, 1)) ?: 'normal';
-                                            
+
                                             $tempLabel = $temp == 'ice' ? '🧊 Ice' : '🔥 Hot';
                                             $sugarLabels = [
                                                 'less_sugar' => 'Less Sweet',
