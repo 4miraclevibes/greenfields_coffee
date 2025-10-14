@@ -4,26 +4,39 @@
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="card mt-2">
-    <h5 class="card-header">Table Transactions</h5>
+    <h5 class="card-header">
+      Table Transactions - Today Orders
+      <span class="badge bg-primary ms-2">{{ date('d F Y') }}</span>
+    </h5>
     <div class="table-responsive text-nowrap p-3">
       <table class="table" id="example">
         <thead>
           <tr class="text-nowrap table-dark">
-            <th class="text-white">No</th>
+            <th class="text-white">Queue #</th>
             <th class="text-white">User</th>
             <th class="text-white">Office</th>
             <th class="text-white">Location</th>
             <th class="text-white">Status</th>
             <th class="text-white">Items</th>
             <th class="text-white">Created At</th>
+            <th class="text-white">Updated At</th>
             <th class="text-white">Actions</th>
           </tr>
         </thead>
         <tbody>
           @foreach ($transactions as $transaction)
           <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
-            <td>{{ $transaction->user->name }}</td>
+            <th scope="row">
+              <span class="badge bg-dark" style="font-size: 1rem; padding: 8px 12px;">
+                #{{ $transaction->queue_number }}
+              </span>
+            </th>
+            <td>
+              {{ $transaction->user->name }}
+              @if($transaction->status == 'process' && $transaction->user->name != 'Admin')
+                <br><small class="text-muted"><i class="fas fa-user-tie"></i> Responsible Person</small>
+              @endif
+            </td>
             <td>
               @if($transaction->room)
                 <span class="badge bg-primary">{{ $transaction->room->name }}</span>
@@ -51,7 +64,16 @@
                 View Items ({{ $transaction->transactionDetails->count() }})
               </button>
             </td>
-            <td>{{ $transaction->created_at->format('d/m/Y H:i') }}</td>
+            <td>
+              <small>{{ $transaction->created_at->format('H:i') }}</small>
+            </td>
+            <td>
+              @if($transaction->created_at->eq($transaction->updated_at))
+                <small class="text-muted">-</small>
+              @else
+                <small>{{ $transaction->updated_at->format('H:i') }}</small>
+              @endif
+            </td>
             <td>
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editStatusModal"
                         onclick="editStatus({{ $transaction->id }}, '{{ $transaction->status }}')">
@@ -182,17 +204,34 @@ function viewDetails(id, userName, roomName, location, status, items) {
   // Populate items table
   let itemsHtml = '';
   items.forEach(function(item) {
-    // Format variant label
-    let variantLabel = '';
-    if (item.variant === 'less_sugar') {
-      variantLabel = '<span class="badge bg-warning">🙂 Kurang Manis</span>';
-    } else if (item.variant === 'normal') {
-      variantLabel = '<span class="badge bg-info">😊 Normal</span>';
-    } else if (item.variant === 'no_sugar') {
-      variantLabel = '<span class="badge bg-secondary">🚫 Tanpa Gula</span>';
+    // Parse variant (format: ice_less_sugar, hot_normal, dll)
+    let variantParts = item.variant.split('_');
+    let temp = variantParts[0] || 'ice';
+    let sugar = variantParts.slice(1).join('_') || 'normal';
+
+    // Temperature label
+    let tempLabel = temp === 'ice' ? '🧊 Ice' : '🔥 Hot';
+    let tempBadgeClass = temp === 'ice' ? 'bg-info' : 'bg-danger';
+
+    // Sugar label
+    let sugarLabel = '';
+    let sugarBadgeClass = '';
+    if (sugar === 'less_sugar') {
+      sugarLabel = '🙂 Less Sweet';
+      sugarBadgeClass = 'bg-warning';
+    } else if (sugar === 'normal') {
+      sugarLabel = '😊 Normal';
+      sugarBadgeClass = 'bg-success';
+    } else if (sugar === 'no_sugar') {
+      sugarLabel = '🚫 No Sugar';
+      sugarBadgeClass = 'bg-secondary';
     } else {
-      variantLabel = '<span class="badge bg-light text-dark">-</span>';
+      sugarLabel = sugar.replace('_', ' ').toUpperCase();
+      sugarBadgeClass = 'bg-light text-dark';
     }
+
+    let variantLabel = '<span class="badge ' + tempBadgeClass + '">' + tempLabel + '</span> ' +
+                       '<span class="badge ' + sugarBadgeClass + '">' + sugarLabel + '</span>';
 
     itemsHtml += '<tr>';
     itemsHtml += '<td>' + item.menu.name + '</td>';
