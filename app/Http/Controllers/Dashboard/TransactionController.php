@@ -18,7 +18,7 @@ class TransactionController extends Controller
     {
         $request->validate([
             'status' => 'required|in:pending,process,completed,cancel',
-            'responsible_person' => 'required_if:status,process|exists:users,id'
+            'responsible_person' => 'nullable|required_if:status,process|exists:users,id'
         ]);
 
         $updateData = ['status' => $request->status];
