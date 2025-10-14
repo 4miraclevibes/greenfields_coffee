@@ -101,15 +101,27 @@ class LandingController extends Controller
             $transaction->queue_number = $index + 1;
         });
 
-        // 3. Now, re-sort the collection for display purposes (pending first, then process, then completed, then canceled)
-        $transactions = $initialOrderedTransactions->sortBy(function ($transaction) {
-            switch ($transaction->status) {
-                case 'pending': return 0;
-                case 'process': return 1;
-                case 'completed': return 2;
-                case 'canceled': return 3;
-                default: return 4;
+        // 3. Now, re-sort the collection for display purposes
+        // Sort by: status priority first (pending, process, completed, canceled)
+        // Then by: queue_number (earliest antrian first within same status)
+        $transactions = $initialOrderedTransactions->sort(function ($a, $b) {
+            $statusPriority = [
+                'pending' => 0,
+                'process' => 1,
+                'completed' => 2,
+                'canceled' => 3
+            ];
+
+            $aPriority = $statusPriority[$a->status] ?? 4;
+            $bPriority = $statusPriority[$b->status] ?? 4;
+
+            // First, sort by status priority
+            if ($aPriority !== $bPriority) {
+                return $aPriority - $bPriority;
             }
+
+            // If same status, sort by queue_number (earlier queue first)
+            return $a->queue_number - $b->queue_number;
         })->values(); // Re-index the collection after sorting
 
         return view('pages.frontend.queue', compact('transactions'));
