@@ -423,7 +423,7 @@
                 <div class="stat-label">Completed</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="canceledOrders">{{ $transactions->where('status', 'canceled')->count() }}</div>
+                <div class="stat-number" id="canceledOrders">{{ $transactions->where('status', 'cancel')->count() }}</div>
                 <div class="stat-label">Cancelled</div>
             </div>
         </div>
