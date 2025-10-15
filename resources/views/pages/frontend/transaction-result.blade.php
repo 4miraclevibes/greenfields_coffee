@@ -293,7 +293,7 @@
                     <i class="fas fa-spinner fa-spin status-icon"></i> In Progress
                 @elseif($transaction->status == 'completed')
                     <i class="fas fa-check-circle status-icon"></i> Completed
-                @elseif($transaction->status == 'canceled')
+                @elseif($transaction->status == 'cancel')
                     <i class="fas fa-times-circle status-icon"></i> Cancelled
                 @endif
             </span>
