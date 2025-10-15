@@ -758,7 +758,7 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-0">
+                                <div class="mb-2">
                                     <label class="form-label">
                                         <i class="fas fa-sliders-h"></i> Sugar Level
                                     </label>
@@ -769,7 +769,14 @@
                                     </select>
                                 </div>
 
-                                <!-- Hidden field untuk variant (hasil concatenate) -->
+                                <div class="mb-0">
+                                    <label class="form-label">
+                                        <i class="fas fa-sticky-note"></i> Notes (Optional)
+                                    </label>
+                                    <input type="text" class="form-control notes-input" data-index="${itemIndex}" placeholder="e.g., Less ice, Extra hot, etc.">
+                                </div>
+
+                                <!-- Hidden field untuk variant (hasil concatenate: temp_sugar||notes) -->
                                 <input type="hidden" name="items[${itemIndex}][variant]" class="variant-input" data-index="${itemIndex}" value="hot_normal">
                             </div>
                         `;
@@ -805,18 +812,34 @@
                     updateVariant(this.dataset.index);
                 });
             });
+
+            // Event listener untuk notes input
+            document.querySelectorAll('.notes-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    updateVariant(this.dataset.index);
+                });
+            });
         }
 
-        // Function untuk update variant (concatenate temp + sugar)
+        // Function untuk update variant (concatenate temp + sugar + notes)
+        // Format: temp_sugar||notes (jika ada notes)
         function updateVariant(index) {
             const tempSelect = document.querySelector(`.temp-select[data-index="${index}"]`);
             const sugarSelect = document.querySelector(`.sugar-select[data-index="${index}"]`);
+            const notesInput = document.querySelector(`.notes-input[data-index="${index}"]`);
             const variantInput = document.querySelector(`.variant-input[data-index="${index}"]`);
 
             if (tempSelect && sugarSelect && variantInput) {
                 const temp = tempSelect.value;
                 const sugar = sugarSelect.value;
-                variantInput.value = `${temp}_${sugar}`;
+                const notes = notesInput ? notesInput.value.trim() : '';
+
+                // Format: temp_sugar||notes (jika ada notes)
+                if (notes) {
+                    variantInput.value = `${temp}_${sugar}||${notes}`;
+                } else {
+                    variantInput.value = `${temp}_${sugar}`;
+                }
             }
         }
 

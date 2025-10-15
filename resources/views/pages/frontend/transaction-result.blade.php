@@ -327,7 +327,12 @@
                     <div class="item-quantity">
                         <i class="fas fa-user"></i> {{ $detail->employee }} |
                         @php
-                            $variantParts = explode('_', $detail->variant);
+                            // Parse variant: format bisa "hot_normal" atau "hot_normal||notes"
+                            $variantFull = explode('||', $detail->variant);
+                            $variantBase = $variantFull[0];
+                            $notes = $variantFull[1] ?? null;
+
+                            $variantParts = explode('_', $variantBase);
                             $temp = $variantParts[0] ?? 'ice';
                             $sugar = implode('_', array_slice($variantParts, 1)) ?: 'normal';
 
@@ -341,6 +346,11 @@
                         @endphp
                         <i class="fas fa-temperature-low"></i> {{ $tempLabel }} |
                         <i class="fas fa-sliders-h"></i> {{ $sugarLabel }}
+                        @if($notes)
+                            <br><small style="color: #856404; font-style: italic;">
+                                <i class="fas fa-sticky-note"></i> {{ $notes }}
+                            </small>
+                        @endif
                     </div>
                 </div>
                 <div class="item-price">

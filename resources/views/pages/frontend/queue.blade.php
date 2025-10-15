@@ -477,7 +477,12 @@
                                         </div>
 
                                         @php
-                                            $variantParts = explode('_', $detail->variant);
+                                            // Parse variant: format bisa "hot_normal" atau "hot_normal||notes"
+                                            $variantFull = explode('||', $detail->variant);
+                                            $variantBase = $variantFull[0];
+                                            $notes = $variantFull[1] ?? null;
+
+                                            $variantParts = explode('_', $variantBase);
                                             $temp = $variantParts[0] ?? 'ice';
                                             $sugar = implode('_', array_slice($variantParts, 1)) ?: 'normal';
 
@@ -494,6 +499,17 @@
                                             <i class="fas fa-temperature-low"></i> {{ $tempLabel }} |
                                             <i class="fas fa-sliders-h"></i> {{ $sugarLabel }}
                                         </div>
+
+                                        @if($notes)
+                                        <div style="margin-top: 6px; padding: 6px 8px; background: rgba(255, 193, 7, 0.15); border-left: 2px solid #ffc107; border-radius: 4px;">
+                                            <div style="font-size: 0.65rem; color: #856404; font-weight: 600; text-transform: uppercase; margin-bottom: 2px;">
+                                                <i class="fas fa-sticky-note"></i> Notes
+                                            </div>
+                                            <div style="font-size: 0.8rem; color: #856404; font-style: italic;">
+                                                {{ $notes }}
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <span class="item-quantity">{{ $detail->quantity }}x</span>

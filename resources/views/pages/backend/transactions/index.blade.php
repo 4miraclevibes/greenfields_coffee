@@ -204,8 +204,12 @@ function viewDetails(id, userName, roomName, location, status, items) {
   // Populate items table
   let itemsHtml = '';
   items.forEach(function(item) {
-    // Parse variant (format: ice_less_sugar, hot_normal, dll)
-    let variantParts = item.variant.split('_');
+    // Parse variant (format: ice_less_sugar atau ice_less_sugar||notes)
+    let variantFull = item.variant.split('||');
+    let variantBase = variantFull[0];
+    let notes = variantFull[1] || null;
+
+    let variantParts = variantBase.split('_');
     let temp = variantParts[0] || 'ice';
     let sugar = variantParts.slice(1).join('_') || 'normal';
 
@@ -232,6 +236,11 @@ function viewDetails(id, userName, roomName, location, status, items) {
 
     let variantLabel = '<span class="badge ' + tempBadgeClass + '">' + tempLabel + '</span> ' +
                        '<span class="badge ' + sugarBadgeClass + '">' + sugarLabel + '</span>';
+
+    // Add notes if exists
+    if (notes) {
+      variantLabel += '<br><small class="text-muted"><i class="fas fa-sticky-note"></i> ' + notes + '</small>';
+    }
 
     itemsHtml += '<tr>';
     itemsHtml += '<td>' + item.menu.name + '</td>';
