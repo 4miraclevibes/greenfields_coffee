@@ -181,6 +181,14 @@ class LandingController extends Controller
         // Load transaction dengan relasi yang diperlukan
         $transaction = $transaction->load(['room', 'transactionDetails.menu']);
 
+        // Calculate queue number (sama seperti di queue page)
+        $todayTransactions = Transaction::whereDate('created_at', today())
+            ->orderBy('created_at', 'asc')
+            ->pluck('id')
+            ->toArray();
+
+        $queueNumber = array_search($transaction->id, $todayTransactions) + 1;
+
         // Temperature labels
         $tempLabels = [
             'ice' => '🧊 Ice',
@@ -197,6 +205,7 @@ class LandingController extends Controller
         // Format pesan WhatsApp
         $message = "☕ *PESANAN KOPI BARU!*\n\n"
             . "*{$selectedIntro}!*\n\n"
+            . "🎫 Nomor Antrian: *#{$queueNumber}*\n"
             . "ID Pesanan: *#{$transaction->id}*\n"
             . "Office: *{$transaction->room->name}*\n"
             . "Ruangan: *{$transaction->location}*\n"
@@ -207,8 +216,12 @@ class LandingController extends Controller
         // Tambahkan detail menu
         $itemNumber = 1;
         foreach ($transaction->transactionDetails as $detail) {
-            // Parse variant (format: ice_less_sugar, hot_normal, dll)
-            $variantParts = explode('_', $detail->variant);
+            // Parse variant (format bisa: ice_less_sugar atau ice_less_sugar||notes)
+            $variantFull = explode('||', $detail->variant);
+            $variantBase = $variantFull[0];
+            $notes = $variantFull[1] ?? null;
+
+            $variantParts = explode('_', $variantBase);
             $temp = $variantParts[0] ?? 'ice';
             $sugar = implode('_', array_slice($variantParts, 1)) ?: 'normal';
 
@@ -219,7 +232,14 @@ class LandingController extends Controller
                 . "   👤 Untuk: {$detail->employee}\n"
                 . "   🌡️ Temp: {$tempText}\n"
                 . "   🎚️ Gula: {$sugarText}\n"
-                . "   📦 Qty: {$detail->quantity}x\n\n";
+                . "   📦 Qty: {$detail->quantity}x\n";
+
+            // Tambahkan notes jika ada
+            if ($notes) {
+                $message .= "   📝 Catatan: {$notes}\n";
+            }
+
+            $message .= "\n";
             $itemNumber++;
         }
 
