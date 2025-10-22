@@ -129,11 +129,21 @@ class LandingController extends Controller
 
     public function bartenderPickOrder()
     {
-        // Get pending transactions only
-        $transactions = Transaction::with(['room', 'transactionDetails.menu'])
-            ->where('status', 'pending')
+        // 1. Get all today's transactions ordered by created_at to establish queue numbers
+        $allTodayTransactions = Transaction::whereDate('created_at', today())
             ->orderBy('created_at', 'asc')
             ->get();
+
+        // 2. Assign queue numbers based on creation order for the day
+        $allTodayTransactions->each(function ($transaction, $index) {
+            $transaction->queue_number = $index + 1;
+        });
+
+        // 3. Filter only pending transactions for display
+        $transactions = $allTodayTransactions->where('status', 'pending')->values();
+
+        // 4. Load necessary relationships for pending transactions
+        $transactions->load(['room', 'transactionDetails.menu']);
 
         return view('pages.frontend.bartender-pick', compact('transactions'));
     }

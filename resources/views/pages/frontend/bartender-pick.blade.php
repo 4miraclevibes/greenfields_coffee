@@ -127,6 +127,39 @@
             margin-bottom: 12px;
         }
 
+        .queue-number {
+            background: linear-gradient(135deg, #4a7c59, #2d5a27);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 6px 20px rgba(74, 124, 89, 0.3);
+            position: relative;
+        }
+
+        .queue-number::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 3px solid rgba(74, 124, 89, 0.2);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
         .order-number {
             background: linear-gradient(135deg, #ffc107, #ff8f00);
             color: white;
@@ -514,6 +547,7 @@
         <div class="order-grid" id="orderList">
             @forelse($transactions as $transaction)
             <div class="order-card">
+                <div class="queue-number">{{ $transaction->queue_number }}</div>
                 <div class="order-header">
                     <div class="order-number">
                         <i class="fas fa-hashtag"></i> {{ $transaction->id }}
@@ -571,6 +605,7 @@
                 <form action="{{ route('bartender.pick.order.store', $transaction->id) }}" method="POST" class="order-form">
                     @csrf
                     <button type="button" class="btn-pick"
+                            data-queue-number="{{ $transaction->queue_number }}"
                             data-order-id="{{ $transaction->id }}"
                             data-room="{{ $transaction->room->name }}"
                             data-location="{{ $transaction->location }}"
@@ -635,6 +670,7 @@
         }, 10000);
 
         function showConfirm(button) {
+            const queueNumber = button.dataset.queueNumber;
             const orderId = button.dataset.orderId;
             const room = button.dataset.room;
             const location = button.dataset.location;
@@ -644,6 +680,12 @@
 
             // Build details HTML
             const detailsHTML = `
+                <div class="confirm-detail-row">
+                    <span class="confirm-detail-label">
+                        <i class="fas fa-list-ol"></i> Queue Number:
+                    </span>
+                    <span class="confirm-detail-value">#${queueNumber}</span>
+                </div>
                 <div class="confirm-detail-row">
                     <span class="confirm-detail-label">
                         <i class="fas fa-hashtag"></i> Order ID:
