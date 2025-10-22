@@ -539,7 +539,7 @@
         // Auto refresh every 5 seconds
         setInterval(function() {
             refreshQueue();
-        }, 5000);
+        }, 1000);
 
         function refreshQueue() {
             // Show refresh indicator
@@ -583,14 +583,14 @@
                 // Hide refresh indicator
                 setTimeout(() => {
                     indicator.classList.remove('show');
-                }, 1000);
+                }, 500);
             })
             .catch(error => {
                 console.error('Error refreshing queue:', error);
                 // Hide refresh indicator even on error
                 setTimeout(() => {
                     indicator.classList.remove('show');
-                }, 1000);
+                }, 500);
             });
         }
 
